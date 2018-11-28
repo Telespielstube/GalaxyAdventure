@@ -1,0 +1,26 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets(1879,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/external/GLEW_190.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets(1879,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/external/GLFW_276.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\Microsoft.Common.CurrentVersion.targets(1879,5): warning : The referenced project 'C:/Users/tj/Documents/OpenGL-tutorial_Binaries/ZERO_CHECK.vcxproj' does not exist.
+  CGTutorial.cpp
+  Obj3D.cpp
+  objects.cpp
+  objloader.cpp
+  shader.cpp
+  texture.cpp
+l:\cgtutorial\objects.cpp(237): warning C4018: '<=': signed/unsigned mismatch
+l:\cgtutorial\objects.cpp(247): warning C4018: '<=': signed/unsigned mismatch
+l:\cgtutorial\cgtutorial.cpp(340): warning C4305: 'argument': truncation from 'double' to 'float'
+glfw3d.lib(context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(context.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(init.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(input.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(input.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(monitor.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(window.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(win32_init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(win32_init.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(win32_monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(win32_monitor.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(win32_time.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(win32_time.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(win32_tls.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(win32_tls.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(win32_window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(win32_window.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(winmm_joystick.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(winmm_joystick.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glfw3d.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3d.lib(wgl_context.obj)' or at 'L:\CGTutorial\Debug\glfw.pdb'; linking object as if no debug info
+glew32sd.lib(glew.obj) : warning LNK4099: PDB 'glew_static.pdb' was not found with 'glew32sd.lib(glew.obj)' or at 'L:\CGTutorial\Debug\glew_static.pdb'; linking object as if no debug info
+  CGTutorial.vcxproj -> L:\CGTutorial\Debug\CGTutorial.exe
