@@ -1,2 +1,3 @@
 ﻿  GalaxyAdventure.cpp
-  GalaxyAdventure.vcxproj -> F:\HTWBerlin\ComputerGrafik\Beleg\GalaxyAdventure\GalaxyAdventure\Debug\GalaxyAdventure.exe
+LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.
+  GalaxyAdventure.vcxproj -> C:\Users\Wieselman\git\GalaxyAdventure\GalaxyAdventure\Debug\GalaxyAdventure.exe
