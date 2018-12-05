@@ -133,6 +133,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GalaxyAdventure.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Spaceship.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Spaceship.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

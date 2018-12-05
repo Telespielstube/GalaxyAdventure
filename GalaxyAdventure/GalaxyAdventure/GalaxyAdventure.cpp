@@ -4,8 +4,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-//#include "GalaxyAdventure.h"
+#include "Shader.h"
+#include "Spaceship.h"
 
+GLFWwindow* window;
 
 int main() {
 	// Initialise GLFW
@@ -23,7 +25,7 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
 
 	// Open a window and create its OpenGL context
-	GLFWwindow* window; // (In the accompanying source code, this variable is global for simplicity)
+	
 	window = glfwCreateWindow(1366, 768, "Galaxy Adventure", NULL, NULL);
 	//Sets the postion for the window
 	glfwSetWindowPos(window, 120, 120);
@@ -42,12 +44,14 @@ int main() {
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+	glUseProgram(programID);
+	Spaceship* spaceShip = new Spaceship();
 
+	//Eventloop
 	do {
-		// Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		// Draw nothing, see you in tutorial 2 !
+		// Draw objects
+		spaceShip->drawSpaceShip();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
@@ -57,4 +61,9 @@ int main() {
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0);
 
+	glDeleteProgram(programID);
+	glfwTerminate();
+
+	return 0;
 }
+
