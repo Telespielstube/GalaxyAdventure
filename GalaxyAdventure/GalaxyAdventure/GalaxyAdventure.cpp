@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Spaceship.h"
 #include "Texture.h"
+#include "Control.h"
 
 GLFWwindow* window;
 
@@ -28,23 +29,6 @@ void sendMVP()
 
 }
 
-float angleX;
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	switch (key)
-	{
-	case GLFW_KEY_RIGHT:
-		angleX += 0.1f;
-		break;
-
-	case GLFW_KEY_LEFT:
-		angleX -= 0.1f;
-		break;
-	default:
-		break;
-	}
-}
 
 int main() 
 {
@@ -79,11 +63,9 @@ int main()
 	}
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	// Auf Keyboard-Events reagieren
-	glfwSetKeyCallback(window, key_callback);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -97,6 +79,7 @@ int main()
 	
 	//Create objects
 	Spaceship* spaceShip = new Spaceship("Ship.obj");
+	Control control;
 	//Create gate object here.
 	
 	do {
@@ -104,11 +87,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 
-
+		float spaceShipMovement = control.moveSpaceship();
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-		Model = glm::translate(Model, glm::vec3(angleX, 0.0, 0.0));
 		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		Model = glm::translate(Model, glm::vec3(spaceShipMovement, 0.0, 0.0));
+		
 		// Camera matrix
 		View = glm::lookAt(
 			glm::vec3(0, 18, 20), // Camera is at (4,3,-3), in World Space
@@ -118,9 +102,6 @@ int main()
 		// Model matrix : an identity matrix (model will be at the origin)
 		glm::mat4 Model = glm::mat4(1.0f);
 		
-		//Model = glm::rotate(Model, angleX, glm::vec3(1.0f, .0f, .0f));
-		
-		//Model = glm::scale(Model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Texture);
 
