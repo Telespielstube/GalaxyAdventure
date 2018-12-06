@@ -34,7 +34,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	switch (key)
 	{
-	case GLFW_KEY_RIGHT == :
+	case GLFW_KEY_RIGHT:
 		angleX += 0.1f;
 		break;
 
