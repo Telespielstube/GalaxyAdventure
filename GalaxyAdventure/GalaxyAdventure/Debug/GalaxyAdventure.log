@@ -1,2 +1,9 @@
 ﻿  GalaxyAdventure.cpp
+<<<<<<< HEAD
   GalaxyAdventure.vcxproj -> F:\HTWBerlin\ComputerGrafik\Beleg\GalaxyAdventure\GalaxyAdventure\Debug\GalaxyAdventure.exe
+=======
+  Shader.cpp
+  Spaceship.cpp
+LINK : warning LNK4098: Standardbibliothek "MSVCRT" steht in Konflikt mit anderen Bibliotheken; /NODEFAULTLIB:Bibliothek verwenden.
+  GalaxyAdventure.vcxproj -> C:\Users\Wieselman\git\GalaxyAdventure\GalaxyAdventure\Debug\GalaxyAdventure.exe
+>>>>>>> e18952ae0e04a478294b014460b63445b196a7c4
