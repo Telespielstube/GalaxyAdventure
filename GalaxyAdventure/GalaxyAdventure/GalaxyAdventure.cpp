@@ -6,10 +6,48 @@
 #include <glm/glm.hpp>
 #include "Shader.h"
 #include "Spaceship.h"
+#include "Texture.h"
 
 GLFWwindow* window;
 
-int main() {
+GLuint programID;
+glm::mat4 Projection;
+glm::mat4 View;
+glm::mat4 Model;
+glm::mat4 MVP;
+ 
+void sendMVP()
+{
+	// Our ModelViewProjection : multiplication of our 3 matrices
+	MVP = Projection * View * Model;
+	// Send our transformation to the currently bound shader, 
+	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &Projection[0][0]);
+
+}
+
+float angleX;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	switch (key)
+	{
+	case GLFW_KEY_RIGHT == :
+		angleX += 0.1f;
+		break;
+
+	case GLFW_KEY_LEFT:
+		angleX -= 0.1f;
+		break;
+	default:
+		break;
+	}
+}
+
+int main() 
+{
 	// Initialise GLFW
 	glewExperimental = true; // Needed for core profile
 	if (!glfwInit())
@@ -18,13 +56,11 @@ int main() {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfwWindowHint(GLFW_SAMPLES, 4); 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL 
-
-	// Open a window and create its OpenGL context
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
 	
 	window = glfwCreateWindow(1366, 768, "Galaxy Adventure", NULL, NULL);
 	//Sets the postion for the window
@@ -42,15 +78,54 @@ int main() {
 		return -1;
 	}
 
-	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-	glUseProgram(programID);
-	Spaceship* spaceShip = new Spaceship();
+	// Auf Keyboard-Events reagieren
+	glfwSetKeyCallback(window, key_callback);
 
-	//Eventloop
+	// Dark blue background
+	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
+	// Get a handle for our "MVP" uniform
+	
+	
+	GLuint Texture = loadBMP_custom("shiptexture.bmp");
+	
+	//Create objects
+	Spaceship* spaceShip = new Spaceship("Ship.obj");
+	//Create gate object here.
+	
 	do {
-		// Draw objects
+		glDisable(GL_CULL_FACE);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(programID);
+
+
+		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+		Model = glm::translate(Model, glm::vec3(angleX, 0.0, 0.0));
+		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		// Camera matrix
+		View = glm::lookAt(
+			glm::vec3(0, 18, 20), // Camera is at (4,3,-3), in World Space
+			glm::vec3(0, 8, 0), // and looks at the origin
+			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		);
+		// Model matrix : an identity matrix (model will be at the origin)
+		glm::mat4 Model = glm::mat4(1.0f);
+		
+		//Model = glm::rotate(Model, angleX, glm::vec3(1.0f, .0f, .0f));
+		
+		//Model = glm::scale(Model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Texture);
+
+		sendMVP();
+		//Draw object
 		spaceShip->drawSpaceShip();
 
 		// Swap buffers
@@ -60,7 +135,7 @@ int main() {
 	} // Check if the ESC key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0);
-
+	
 	glDeleteProgram(programID);
 	glfwTerminate();
 

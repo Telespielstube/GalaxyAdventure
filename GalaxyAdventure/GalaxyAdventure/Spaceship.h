@@ -16,15 +16,16 @@ class Spaceship
 	std::vector<glm::vec3> normals;
 
 	GLuint vertexbuffer;
-	//GLuint normalbuffer;
-	//GLuint uvbuffer;
+	GLuint normalbuffer;
+	GLuint uvbuffer;
 
 public:
-	//
-	Spaceship();
+	// Constructor
+	Spaceship(const char *filename);
 	
-	//
 	void drawSpaceShip();
+
+	// Destructor
 	~Spaceship();
 };
 
