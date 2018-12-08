@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include "Renderer.h"
 #include "Shader.h"
 #include "Spaceship.h"
 #include "Texture.h"
@@ -23,13 +24,6 @@ glm::mat4 Save;
 
 void sendMVP()
 {
-	// Our ModelViewProjection : multiplication of our 3 matrices
-	MVP = Projection * View * Model;
-	// Send our transformation to the currently bound shader, 
-	glUniformMatrix4fv(glGetUniformLocation(programID, "MVP"), 1, GL_FALSE, &MVP[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &Projection[0][0]);
 
 }
 
@@ -40,7 +34,7 @@ void alignShipOnScreen()
 	Save = Model;
 	Model = glm::translate(Model, glm::vec3(.0f, -12.0f, .0f));
 	sendMVP();
-	spaceShip->draw();
+	spaceShip->draw(Model);
 	Model = Save;
 }
 /** Aligns the ship to the right position on screen.
@@ -48,24 +42,14 @@ void alignShipOnScreen()
 */
 void alignGateOnScreen()
 {
-	float scaleFactor = 3.0f;
-	float angleX = -45.0f;
-	float angleY = 90.0f;
-	Save = Model;
-	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
-	Model = glm::translate(Model, glm::vec3(.0f, -1.0f, .0f));
-	Model = glm::rotate(Model, angleX, glm::vec3(1.0f, .0f, .0f));
-	Model = glm::rotate(Model, angleY, glm::vec3(.0f, 1.0f, .0f));
-	sendMVP();
-	gate->draw();
-	Model = Save;
+
 }
 
 bool initializeGLFW()
 {
 	if (!glfwInit())
 	{
-		return false;
+		return false; 
 	}
 
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -114,11 +98,6 @@ int main()
 
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 	GLuint Texture = loadBMP_custom("shiptexture.bmp");
-	
-	//Create objects
-	spaceShip = new Spaceship("Ship.obj");
-	gate = new Gate("Gate.obj");
-	Controls controls;
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -134,15 +113,21 @@ int main()
 		glm::vec3(0, 1, 0)
 	);
 
+	Renderer myRenderer(programID, Projection, View);
+
+	//Create objects
+	spaceShip = new Spaceship("Ship.obj", myRenderer);
+	gate = new Gate("Gate.obj", myRenderer);
+	gate->setPosition(0.0f, -1.0f, 0.0f);
+	Controls controls;
 	do 
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		float spaceShipMovement = controls.moveSpaceship(window);
-		Model = glm::translate(Model, glm::vec3(spaceShipMovement, 0.0, 0.0));
-
-		alignShipOnScreen();
-		alignGateOnScreen();
+		spaceShip->setPosition(spaceShip->getXPosition() + spaceShipMovement, -12.0f, 0.0f);
+		spaceShip->draw(Model);
+		gate->draw(Model);
 
 		// Swap buffers
 		glfwSwapBuffers(window);

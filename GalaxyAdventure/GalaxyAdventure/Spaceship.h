@@ -10,8 +10,10 @@ class Spaceship : public RenderedObject
 {
 public:
 	// Constructor
-	Spaceship(const char *filename);
+	Spaceship(const char *filename, Renderer &renderer);
 	// Destructor
 	virtual ~Spaceship();
+
+	virtual void draw(glm::mat4 &Model);
 };
 
