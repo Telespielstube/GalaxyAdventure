@@ -8,16 +8,6 @@
 #include "objloader.h"
 #include "Gate.h"
 
-GLuint GateVertexArrayID;
-
-std::vector<glm::vec3> gateVertices;
-std::vector<glm::vec2> gateUvs;
-std::vector<glm::vec3> gateNormals;
-
-GLuint gateVertexBuffer;
-GLuint gateNormalBuffer;
-GLuint gateUvBuffer;
-
 /** Funtion to read the data from the file and passing the data to the vertexshader and fragmentshader.
 *
 *	@param	filename	path of the obj. file.
@@ -25,19 +15,19 @@ GLuint gateUvBuffer;
 */
 Gate::Gate(const char *filename)
 {
-	bool object = loadObject(filename, gateVertices, gateUvs, gateNormals);
+	bool object = loadObject(filename, vertices, uvs, normals);
 
-	glGenVertexArrays(1, &GateVertexArrayID);
-	glBindVertexArray(GateVertexArrayID);
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
 
-	glGenBuffers(1, &gateVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gateVertexBuffer);
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 
 	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, gateVertices.size() * sizeof(glm::vec3), &gateVertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, gateVertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(
 		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 		3,                  // size
@@ -47,9 +37,9 @@ Gate::Gate(const char *filename)
 		(void*)0            // array buffer offset
 	);
 
-	glGenBuffers(1, &gateNormalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gateNormalBuffer);
-	glBufferData(GL_ARRAY_BUFFER, gateNormals.size() * sizeof(glm::vec3), &gateNormals[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(2); // siehe layout im vertex shader 
 	glVertexAttribPointer(
 		2,
@@ -60,9 +50,9 @@ Gate::Gate(const char *filename)
 		(void*)0);
 
 
-	glGenBuffers(1, &gateUvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gateUvBuffer);
-	glBufferData(GL_ARRAY_BUFFER, gateUvs.size() * sizeof(glm::vec2), &gateUvs[0], GL_STATIC_DRAW);
+	glGenBuffers(1, &uvbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1); // siehe layout im vertex shader 
 	glVertexAttribPointer(
 		1,
@@ -71,15 +61,6 @@ Gate::Gate(const char *filename)
 		GL_FALSE,
 		0,
 		(void*)0);
-}
-
-/** Draws the gate on the screen.
-*
-*/
-void Gate::drawGate()
-{
-	glBindVertexArray(GateVertexArrayID);
-	glDrawArrays(GL_TRIANGLES, 0, gateVertices.size());
 }
 
 /** Aligns the ship to the right position on screen.
@@ -95,7 +76,7 @@ void Gate::alignGateOnScreen(glm::mat4 Model)
 */
 Gate::~Gate()
 {
-	glDeleteBuffers(1, &gateVertexBuffer);
-	glDeleteBuffers(1, &gateUvBuffer);
-	glDeleteBuffers(1, &gateNormalBuffer);
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &uvbuffer);
+	glDeleteBuffers(1, &normalbuffer);
 }

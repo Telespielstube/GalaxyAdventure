@@ -40,7 +40,7 @@ void alignShipOnScreen()
 	Save = Model;
 	Model = glm::translate(Model, glm::vec3(.0f, -12.0f, .0f));
 	sendMVP();
-	spaceShip->drawSpaceShip();
+	spaceShip->draw();
 	Model = Save;
 }
 /** Aligns the ship to the right position on screen.
@@ -57,35 +57,51 @@ void alignGateOnScreen()
 	Model = glm::rotate(Model, angleX, glm::vec3(1.0f, .0f, .0f));
 	Model = glm::rotate(Model, angleY, glm::vec3(.0f, 1.0f, .0f));
 	sendMVP();
-	gate->drawGate();
+	gate->draw();
 	Model = Save;
 }
-int main() 
+
+bool initializeGLFW()
 {
-	glewExperimental = true; 
 	if (!glfwInit())
 	{
-		fprintf(stderr, "Failed to initialize GLFW\n");
-		return -1;
+		return false;
 	}
 
-	glfwWindowHint(GLFW_SAMPLES, 4); 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
-	
-	window = glfwCreateWindow(1366, 768, "Galaxy Adventure", NULL, NULL);
-	//Sets the postion for the window
-	glfwSetWindowPos(window, 120, 120);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	return true;
+}
+
+GLFWwindow *createMainWindow(int width, int height, const char *title, int xPosition, int yPosition)
+{
+	window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
+		return NULL;
+	}
+
+	//Sets the postion for the window
+	glfwSetWindowPos(window, xPosition, yPosition);
+    glfwMakeContextCurrent(window); //
+
+	return window;
+}
+
+int main() 
+{
+	glewExperimental = true; 
+	if (!initializeGLFW()) {
+		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
 	}
-	glfwMakeContextCurrent(window); //
-	glewExperimental = true; 
+	
+	window = createMainWindow(1366, 768, "GalaxyAdventure", 120, 120);
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
@@ -104,29 +120,26 @@ int main()
 	gate = new Gate("Gate.obj");
 	Controls controls;
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glDisable(GL_CULL_FACE);
+	glUseProgram(programID);
+
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	// Camera matrix
+	View = glm::lookAt(
+		glm::vec3(0, 18, 20),
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 1, 0)
+	);
+
 	do 
 	{
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		glDisable(GL_CULL_FACE);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glUseProgram(programID);
 
-		
-		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 		float spaceShipMovement = controls.moveSpaceship(window);
 		Model = glm::translate(Model, glm::vec3(spaceShipMovement, 0.0, 0.0));
-		
-		// Camera matrix
-		View = glm::lookAt(
-			glm::vec3(0, 18, 20), 
-			glm::vec3(0, 0, 0), 
-			glm::vec3(0, 1, 0)  
-		);
-		// Model matrix : an identity matrix (model will be at the origin)
-		glm::mat4 Model = glm::mat4(1.0f);
 
 		alignShipOnScreen();
 		alignGateOnScreen();

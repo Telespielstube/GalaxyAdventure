@@ -1,13 +1,13 @@
 #pragma once
+#include "RenderedObject.h"
 
-class Gate
+class Gate : public RenderedObject
 {
 public:
 	// Constructor
 	Gate(const char *filename);
 
-	void drawGate();
 	void alignGateOnScreen(glm::mat4 Model);
-	~Gate();
+	virtual ~Gate();
 };
 

@@ -8,15 +8,7 @@
 #include "objloader.h"
 
 
-GLuint VertexArrayID;
 
-std::vector<glm::vec3> vertices;
-std::vector<glm::vec2> uvs;
-std::vector<glm::vec3> normals;
-
-GLuint vertexbuffer;
-GLuint normalbuffer;
-GLuint uvbuffer;
 
 /** Funtion to read the data from the file and passing the data to the vertexshader and fragmentshader
 *	@param	filename	path of the obj. file.
@@ -73,18 +65,7 @@ Spaceship::Spaceship(const char *filename)
 		(void*)0);	
 }
 
-/* Draws the spaceship
-*/
-void Spaceship::drawSpaceShip()
-{
-	glBindVertexArray(VertexArrayID);
-	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-}
-
 Spaceship::~Spaceship()
 {
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
 }
 
