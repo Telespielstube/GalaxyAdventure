@@ -7,16 +7,20 @@
 #include "Shader.h"
 #include "Spaceship.h"
 #include "Texture.h"
-#include "Control.h"
+#include "Controls.h"
+#include "Gate.h"
 
-GLFWwindow* window;
-
+GLFWwindow *window;
+Spaceship *spaceShip;
+Gate *gate;
 GLuint programID;
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 glm::mat4 MVP;
+glm::mat4 Save;
  
+
 void sendMVP()
 {
 	// Our ModelViewProjection : multiplication of our 3 matrices
@@ -29,11 +33,36 @@ void sendMVP()
 
 }
 
-
+/** Aligns the ship to the right position on screen.
+*/
+void alignShipOnScreen()
+{
+	Save = Model;
+	Model = glm::translate(Model, glm::vec3(.0f, -12.0f, .0f));
+	sendMVP();
+	spaceShip->drawSpaceShip();
+	Model = Save;
+}
+/** Aligns the ship to the right position on screen.
+*
+*/
+void alignGateOnScreen()
+{
+	float scaleFactor = 3.0f;
+	float angleX = -45.0f;
+	float angleY = 90.0f;
+	Save = Model;
+	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
+	Model = glm::translate(Model, glm::vec3(.0f, -1.0f, .0f));
+	Model = glm::rotate(Model, angleX, glm::vec3(1.0f, .0f, .0f));
+	Model = glm::rotate(Model, angleY, glm::vec3(.0f, 1.0f, .0f));
+	sendMVP();
+	gate->drawGate();
+	Model = Save;
+}
 int main() 
 {
-	// Initialise GLFW
-	glewExperimental = true; // Needed for core profile
+	glewExperimental = true; 
 	if (!glfwInit())
 	{
 		fprintf(stderr, "Failed to initialize GLFW\n");
@@ -55,8 +84,8 @@ int main()
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(window); // Initialize GLEW
-	glewExperimental = true; // Needed in core profile
+	glfwMakeContextCurrent(window); //
+	glewExperimental = true; 
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
@@ -67,55 +96,46 @@ int main()
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-
-	// Get a handle for our "MVP" uniform
-	
-	
 	GLuint Texture = loadBMP_custom("shiptexture.bmp");
 	
 	//Create objects
-	Spaceship* spaceShip = new Spaceship("Ship.obj");
-	Control control;
-	//Create gate object here.
-	
-	do {
+	spaceShip = new Spaceship("Ship.obj");
+	gate = new Gate("Gate.obj");
+	Controls controls;
+
+	do 
+	{
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 		glDisable(GL_CULL_FACE);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glUseProgram(programID);
 
-		float spaceShipMovement = control.moveSpaceship();
+		
 		GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 		// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 		Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+		float spaceShipMovement = controls.moveSpaceship(window);
 		Model = glm::translate(Model, glm::vec3(spaceShipMovement, 0.0, 0.0));
 		
 		// Camera matrix
 		View = glm::lookAt(
-			glm::vec3(0, 18, 20), // Camera is at (4,3,-3), in World Space
-			glm::vec3(0, 8, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+			glm::vec3(0, 18, 20), 
+			glm::vec3(0, 0, 0), 
+			glm::vec3(0, 1, 0)  
 		);
 		// Model matrix : an identity matrix (model will be at the origin)
 		glm::mat4 Model = glm::mat4(1.0f);
-		
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Texture);
 
-		sendMVP();
-		//Draw object
-		spaceShip->drawSpaceShip();
+		alignShipOnScreen();
+		alignGateOnScreen();
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-	} // Check if the ESC key was pressed or the window was closed
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		glfwWindowShouldClose(window) == 0);
+	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 	
 	glDeleteProgram(programID);
 	glfwTerminate();

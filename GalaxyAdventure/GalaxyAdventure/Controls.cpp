@@ -1,28 +1,28 @@
 #include <GLFW/glfw3.h>
-#include "Control.h"
-extern GLFWwindow *window;
+#include "Controls.h"
 
 
-Control::Control()
+
+Controls::Controls()
 {
 }
 
-float Control::moveSpaceship()
+float Controls::moveSpaceship(GLFWwindow *window)
 {
 	float angleX = .0f;
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		angleX += 0.1f;
+		angleX += .1f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		angleX -= 0.1f;
+		angleX -= .1f;
 	}
 
 	return angleX;
 }
 
-Control::~Control()
+Controls::~Controls()
 {
 }

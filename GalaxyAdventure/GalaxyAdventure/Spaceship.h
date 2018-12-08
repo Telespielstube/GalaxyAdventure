@@ -9,16 +9,6 @@
 
 class Spaceship
 {
-	GLuint VertexArrayID;
-
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec2> uvs;
-	std::vector<glm::vec3> normals;
-
-	GLuint vertexbuffer;
-	GLuint normalbuffer;
-	GLuint uvbuffer;
-
 public:
 	// Constructor
 	Spaceship(const char *filename);
