@@ -2,25 +2,24 @@
 #include "Controls.h"
 
 
-
 Controls::Controls()
 {
 }
 
 float Controls::moveSpaceship(GLFWwindow *window)
 {
-	float angleX = .0f;
+	float positionX = .0f;
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		angleX += .1f;
+		positionX += .5f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		angleX -= .1f;
+		positionX -= .5f;
 	}
 
-	return angleX;
+	return positionX;
 }
 
 Controls::~Controls()

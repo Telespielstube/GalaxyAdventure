@@ -1,14 +1,19 @@
 #include "RenderedObject.h"
 #include "objloader.h"
 
+
+/** Constructor to read the data from the file and passing the data to the vertexshader and fragmentshader
+*
+*	@param	filename	path of the obj. file.
+*/
 RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_renderer(renderer)
 {
-	xPosition = 0.0f;
+    xPosition = 0.0f;
 	yPosition = 0.0f;
 	zPosition = 0.0f;
+	xAngle = .0f;
 
 	bool object = loadObject(filename, vertices, uvs, normals);
-
 
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
@@ -42,7 +47,6 @@ RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_ren
 		0,
 		(void*)0);
 
-
 	glGenBuffers(1, &uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
@@ -56,20 +60,21 @@ RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_ren
 		(void*)0);
 }
 
-
-RenderedObject::~RenderedObject()
-{
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
-}
-
-void RenderedObject::draw(glm::mat4 &Model)
+/** Draws the vertices on screen.
+*
+*/
+void RenderedObject::drawVertices(glm::mat4 &Model)
 {
 	glBindVertexArray(VertexArrayID);
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
 
+/** Sets a specific position of the object.
+*	
+*	@param	x	holds the x coordinate.
+*	@param	y	holds the y coordinate.
+*	@param	z	holds the z coordinate.
+*/
 void RenderedObject::setPosition(float x, float y, float z)
 {
 	xPosition = x;
@@ -77,3 +82,57 @@ void RenderedObject::setPosition(float x, float y, float z)
 	zPosition = z;
 }
 
+/** Get function for x Position of object.
+*
+*/
+float RenderedObject::getXPosition()
+{
+	return xPosition;
+}
+
+/** Get function for y Position of object.
+*
+*/
+float RenderedObject::getYPosition()
+{
+	return yPosition;
+}
+
+/** Get function for z Position of object.
+*
+*/
+float RenderedObject::getZPosition()
+{
+	return zPosition;
+}
+
+void RenderedObject::setXAngle(float x)
+{
+	xAngle = x;
+}
+
+void RenderedObject::setYAngle(float y)
+{
+	yAngle = y;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/** Destructor
+*
+*/
+RenderedObject::~RenderedObject()
+{
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &uvbuffer);
+	glDeleteBuffers(1, &normalbuffer);
+}

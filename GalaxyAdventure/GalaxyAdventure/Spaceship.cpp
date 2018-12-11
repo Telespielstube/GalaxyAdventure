@@ -7,26 +7,26 @@
 #include "Spaceship.h"
 #include "objloader.h"
 
-
-
-
-/** Funtion to read the data from the file and passing the data to the vertexshader and fragmentshader
-*	@param	filename	path of the obj. file.
+/** Constructor
+*
+*	@param	filename	path to the object file.
+*	@param	renderer	holds the 3 matrices Model, View, Perspective information.
+*	
 */
 Spaceship::Spaceship(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer)
 {
 }
 
-Spaceship::~Spaceship()
-{
-}
+/** Destructor
+*/
+Spaceship::~Spaceship() {}
 
 void Spaceship::draw(glm::mat4 & Model)
 {
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));
 	m_renderer.sendMVP(Model);
-	RenderedObject::draw(Model);
+	RenderedObject::drawVertices(Model);
 	Model = Save;
 }
 

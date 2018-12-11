@@ -7,14 +7,18 @@
 class RenderedObject
 {
 public:
-	RenderedObject(const char *filename, Renderer& renderer);
+	RenderedObject(const char *filename, Renderer &renderer);
 	virtual ~RenderedObject();
-	virtual void draw(glm::mat4 &Model);
+	virtual void drawVertices(glm::mat4 &Model);
 
 	virtual void setPosition(float x, float y, float z);
-	float getXPosition() { return xPosition; }
-	float getYPosition() { return yPosition; }
-	float getPosition() { return zPosition; }
+	float getXPosition();
+	float getYPosition();
+	float getZPosition();
+	virtual void setXAngle(float x);
+	virtual void setYAngle(float y);
+	
+
 protected:
 	void sendMVP(glm::mat4 &Model);
 	Renderer &m_renderer;
@@ -32,4 +36,6 @@ protected:
 	float xPosition;
 	float yPosition;
 	float zPosition;
+	float xAngle;
+	float yAngle;
 };

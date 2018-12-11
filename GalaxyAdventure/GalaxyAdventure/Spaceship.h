@@ -11,6 +11,7 @@ class Spaceship : public RenderedObject
 public:
 	// Constructor
 	Spaceship(const char *filename, Renderer &renderer);
+	
 	// Destructor
 	virtual ~Spaceship();
 
