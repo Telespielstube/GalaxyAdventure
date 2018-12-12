@@ -95,12 +95,13 @@ int main()
 	do 
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		float spaceShipMovement = controls.moveSpaceship(window);
-		float spaceShipForward = controls.moveSpaceshipForward(window);
-		spaceShip.setPosition((spaceShip.getXPosition() + spaceShipMovement), -12.0f, spaceShip.getZPosition() - spaceShipForward);
+		float spaceShipOnX = controls.moveSpaceshipOnX(window);
+		float spaceShipOnY = controls.moveSpaceshipOnY(window);
+		float spaceShipOnZ = controls.moveSpaceshipOnZ(window);
+		spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
 		
 		spaceShip.draw(Model);
-		gate.setPosition(-1.0f, .0f, 2.0f);
+		gate.setPosition(-1.0f, .0f, .0f);
 		gate.setXAngle(-5.0f); // rotates gate
 		gate.setYAngle(90.0f); // rotates gate
 		gate.draw(Model);

@@ -4,8 +4,9 @@ class Controls
 public:
 	Controls();
 
-	float moveSpaceship(GLFWwindow *window);
-	float moveSpaceshipForward(GLFWwindow *window);
+	float moveSpaceshipOnX(GLFWwindow *window);
+	float moveSpaceshipOnY(GLFWwindow *window);
+	float moveSpaceshipOnZ(GLFWwindow *window);
 	~Controls();
 };
 
