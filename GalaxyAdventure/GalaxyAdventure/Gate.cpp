@@ -7,6 +7,8 @@
 #include "Spaceship.h"
 #include "objloader.h"
 #include "Gate.h"
+#include "ColBox.h"
+
 
 /** Constructor
 *
@@ -14,8 +16,9 @@
 *	@param	renderer	holds the 3 matrices Model, View, Perspective information.
 *
 */
-Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer)
+Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer), box1(5, 5, 5)
 {
+
 }
 
 /** Destructor of Gate object
@@ -35,14 +38,16 @@ Gate::~Gate()
 */
 void Gate::draw(glm::mat4 &Model)
 {
-	float scaleFactor = 3.0f;
+
+	float scaleFactor = 4.0f;
 	float angleY = 90.0f;
+
 	glm::mat4 Save = Model;
 	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));
 	Model = glm::rotate(Model, xAngle, glm::vec3(1.0f, .0f, .0f));
 	Model = glm::rotate(Model, yAngle, glm::vec3(.0f, 1.0f, .0f));
-	m_renderer.sendMVP(Model);	
+	m_renderer.sendMVP(Model);
 	RenderedObject::drawVertices(Model);
 	Model = Save;
 }

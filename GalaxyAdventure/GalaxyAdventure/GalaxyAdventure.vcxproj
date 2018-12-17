@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{E6D2681B-06FD-4AFB-9452-E145D93842F9}</ProjectGuid>
     <RootNamespace>GalaxyAdventure</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ColBox.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="GalaxyAdventure.cpp" />
     <ClCompile Include="Gate.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ColBox.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="objloader.h" />

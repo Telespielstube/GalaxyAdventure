@@ -6,6 +6,8 @@ Controls::Controls()
 {
 }
 
+
+float speed = 0.003f;
 /** Moves the spaceship on the x axis.
 *	
 */
@@ -15,11 +17,11 @@ float Controls::moveSpaceshipOnX(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		positionX += .1f;
+		positionX += speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		positionX -= .1f;
+		positionX -= speed;
 	}
 
 	return positionX;
@@ -34,11 +36,11 @@ float Controls::moveSpaceshipOnY(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		positionY += .1f;
+		positionY += speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		positionY -= .1f;
+		positionY -= speed;
 	}
 	return positionY;
 }
@@ -52,11 +54,11 @@ float Controls::moveSpaceshipOnZ(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		positionZ -= .1f;
+		positionZ -= speed;
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		positionZ += .1f;
+		positionZ += speed;
 	}
 	return positionZ;
 }
