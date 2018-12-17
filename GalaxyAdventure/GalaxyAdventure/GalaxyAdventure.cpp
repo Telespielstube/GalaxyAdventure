@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <iostream>
+#include <time.h>
 #include "Renderer.h"
 #include "Shader.h"
 #include "Spaceship.h"
@@ -71,12 +72,12 @@ int main()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
 	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
-
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	//srand(time(NULL));
 
 
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-	GLuint Texture = loadBMP_custom("shiptexture.bmp");
+	//GLuint Texture = loadBMP_custom("shipTexture.bmp");
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
@@ -84,10 +85,10 @@ int main()
 	glUseProgram(programID);
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	Projection = glm::perspective(80.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	// Camera matrix		
 	View = glm::lookAt(
-		glm::vec3(0, 18, 20),
+		glm::vec3(0, 20, 20),
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 1, 0)
 	);
@@ -95,39 +96,54 @@ int main()
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
 	Spaceship spaceShip("Ship.obj", modelRenderer);
-	Gate gate("Gate.obj", modelRenderer);
+	Gate *gate;
 	Controls controls;
-	spaceShip.setPosition(2, 0, 5);
+
+	float newPosition = -1.5f;
+	std::vector<Gate*> gateList;
+	for (int i = 0; i < 5; i++)
+	{
+		gate = new Gate("Gate.obj", modelRenderer);
+		gateList.push_back(gate);
+		gate->setPosition(-1.0f, .0f, newPosition);
+		newPosition -= 5.0f;
+		gate->setXAngle(-5.0f); // rotates gate
+		gate->setYAngle(90.0f); // rotates gate
+	}
+	spaceShip.setPosition(.0f, .0f, .5f);
 
 	// Collisions Distanz
-	float colDX = 7;
-	float colDZ = 5;
-	float colDY = 5;
-	float colL = 4.2;
-
-	gate.setPosition(-1.0f, .0f, .0f);
-	gate.setXAngle(-5.0f); // rotates gate
-	gate.setYAngle(90.0f); // rotates gate
-
+	float colDX = 7.0f;
+	float colDZ = 5.0f;
+	float colDY = 5.0f;
+	float colL = 4.2f;
+	
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		float spaceShipOnX = controls.moveSpaceshipOnX(window);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window);
+		//Light source
+		glm::vec4 lightPositionWorld = Model * glm::vec4(0, 8.0, -2.0f, 1);
+		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
 
-		
-		// Collisonsabfrage
-		if (spaceShip.getZPosition() + spaceShipOnZ <= gate.getZPosition() + colDZ && spaceShip.getZPosition() + spaceShipOnZ >= gate.getZPosition() - colDZ && spaceShip.getXPosition() + spaceShipOnX <= gate.getXPosition() + colDX+2 && spaceShip.getXPosition() + spaceShipOnX >= gate.getXPosition() - colDX && spaceShip.getYPosition() + spaceShipOnY <= gate.getYPosition() + colDY + 3 && spaceShip.getYPosition() + spaceShipOnY >= gate.getYPosition() - colDY)
+		for (int i = 0; i < 5; i++)
 		{
-			if (spaceShip.getZPosition() + spaceShipOnZ <= gate.getZPosition() + colDZ + colL && spaceShip.getZPosition() + spaceShipOnZ >= gate.getZPosition() - colDZ - colL && spaceShip.getXPosition() + spaceShipOnX <= gate.getXPosition() + colDX + 2 - colL -3 && spaceShip.getXPosition() + spaceShipOnX >= gate.getXPosition() - colDX + colL +3 && spaceShip.getYPosition() + spaceShipOnY <= gate.getYPosition() + colDY +3 - colL && spaceShip.getYPosition() + spaceShipOnY >= gate.getYPosition() - colDY + colL)
+			Gate *currentGate = gateList.at(i);
+			// Collisonsabfrage
+			//float currentShipZPos = spaceShip.getZPosition(); // Machs doch so ist kuerzer
+			if (spaceShip.getZPosition() + spaceShipOnZ <= currentGate->getZPosition() + colDZ && spaceShip.getZPosition() + spaceShipOnZ >= currentGate->getZPosition() - colDZ && spaceShip.getXPosition() + spaceShipOnX <= currentGate->getXPosition() + colDX + 2 && spaceShip.getXPosition() + spaceShipOnX >= currentGate->getXPosition() - colDX && spaceShip.getYPosition() + spaceShipOnY <= currentGate->getYPosition() + colDY + 3 && spaceShip.getYPosition() + spaceShipOnY >= currentGate->getYPosition() - colDY)
 			{
+				if (spaceShip.getZPosition() + spaceShipOnZ <= currentGate->getZPosition() + colDZ + colL && spaceShip.getZPosition() + spaceShipOnZ >= currentGate->getZPosition() - colDZ - colL && spaceShip.getXPosition() + spaceShipOnX <= currentGate->getXPosition() + colDX + 2 - colL - 3 && spaceShip.getXPosition() + spaceShipOnX >= currentGate->getXPosition() - colDX + colL + 3 && spaceShip.getYPosition() + spaceShipOnY <= currentGate->getYPosition() + colDY + 3 - colL && spaceShip.getYPosition() + spaceShipOnY >= currentGate->getYPosition() - colDY + colL)
+				{
+					spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+				}
+				spaceShip.setPosition((spaceShip.getXPosition()), (spaceShip.getYPosition()), (spaceShip.getZPosition()));
+			}
+			else {
 				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
 			}
-			spaceShip.setPosition((spaceShip.getXPosition()), (spaceShip.getYPosition()), (spaceShip.getZPosition()));
-		}
-		else {
-			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
 		}
 
 		
@@ -142,8 +158,10 @@ int main()
 		}
 */
 		spaceShip.draw(Model);
-		gate.draw(Model);
-
+		for (int i = 0; i < 5; i++)
+		{
+			gateList.at(i)->draw(Model);
+		}
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();

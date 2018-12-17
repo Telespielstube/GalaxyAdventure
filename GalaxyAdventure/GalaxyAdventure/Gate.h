@@ -9,7 +9,6 @@ public:
 
 	virtual ~Gate();
 	virtual void draw(glm::mat4 & Model);
-
 	ColBox box1;
 };
 

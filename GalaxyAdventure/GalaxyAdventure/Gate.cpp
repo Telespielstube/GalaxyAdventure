@@ -39,7 +39,7 @@ Gate::~Gate()
 void Gate::draw(glm::mat4 &Model)
 {
 
-	float scaleFactor = 4.0f;
+	float scaleFactor = 5.5f;
 	float angleY = 90.0f;
 
 	glm::mat4 Save = Model;
