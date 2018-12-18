@@ -12,15 +12,16 @@
 #include "Texture.h"
 #include "Controls.h"
 #include "Gate.h"
+#include "RandomNumber.h"
 
-
+// Global variables
 GLFWwindow *window;
 GLuint programID;
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 
-
+//Initializes the OpenGL library GLFW.
 bool initializeGLFW()
 {
 	if (!glfwInit())
@@ -37,9 +38,18 @@ bool initializeGLFW()
 	return true;
 }
 
+/** Creates the main windows where the game happens.
+*
+*	@param	width		width of the window.
+*	@param	height		height of the window.
+*	@param	title		title of the window.
+*	@param	xPosition	xPosition on screen.
+*	@param	yPosition	yPosition on screen.
+*
+*/
 GLFWwindow *createMainWindow(int width, int height, const char *title, int xPosition, int yPosition)
 {
-	window = glfwCreateWindow(width, height, title, NULL, NULL);
+	window = glfwCreateWindow(width, height, title, /*glfwGetPrimaryMonitor()*/ NULL, NULL);
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
@@ -54,7 +64,6 @@ GLFWwindow *createMainWindow(int width, int height, const char *title, int xPosi
 }
 
 
-
 int main()
 {
 	glewExperimental = true;
@@ -63,7 +72,7 @@ int main()
 		return -1;
 	}
 
-	window = createMainWindow(1366, 768, "GalaxyAdventure", 120, 120);
+	window = createMainWindow(1800, 900, "GalaxyAdventure", 100, 100);
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		return -1;
@@ -73,7 +82,7 @@ int main()
 
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
-	//srand(time(NULL));
+	
 
 
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
@@ -97,20 +106,32 @@ int main()
 	Renderer modelRenderer(programID, Projection, View);
 	Spaceship spaceShip("Ship.obj", modelRenderer);
 	Gate *gate;
+	RandomNumber randomNumber;
 	Controls controls;
 
-	float newPosition = -1.5f;
+	// Array of gates and random positions. 
+	randomNumber.initializeGenerator();
+	float newPosition = -2.5f;
+	float max = .0f;
+	float min = .0f;
 	std::vector<Gate*> gateList;
-	for (int i = 0; i < 5; i++)
+
+	for (int i = 0; i < 15; i++)
 	{
+		max = 4.0f - ((float)rand()) / (float)RAND_MAX;
+		min = -4.0f + ((float)rand()) / (float)RAND_MAX;
 		gate = new Gate("Gate.obj", modelRenderer);
 		gateList.push_back(gate);
-		gate->setPosition(-1.0f, .0f, newPosition);
+		
+		gate->setPosition((randomNumber.generateRandomNumber(max, min)),
+						(randomNumber.generateRandomNumber(max, min)),
+						newPosition);
 		newPosition -= 5.0f;
 		gate->setXAngle(-5.0f); // rotates gate
 		gate->setYAngle(90.0f); // rotates gate
 	}
-	spaceShip.setPosition(.0f, .0f, .5f);
+	
+	spaceShip.setPosition(.0f, .0f, 13.5f);
 
 	// Collisions Distanz
 	float colDX = 7.0f;
@@ -118,6 +139,7 @@ int main()
 	float colDY = 5.0f;
 	float colL = 4.2f;
 	
+	//Game loop
 	do
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

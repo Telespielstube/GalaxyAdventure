@@ -21,16 +21,6 @@ Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, 
 
 }
 
-/** Destructor of Gate object
-*
-*/
-Gate::~Gate()
-{
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
-}
-
 /** Draws the object and aligns it.
 *
 *	@param	Model	Object to draw on screen.
@@ -50,4 +40,15 @@ void Gate::draw(glm::mat4 &Model)
 	m_renderer.sendMVP(Model);
 	RenderedObject::drawVertices(Model);
 	Model = Save;
+}
+
+/** Destructor of Gate object
+*
+*/
+Gate::~Gate()
+{
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &uvbuffer);
+	glDeleteBuffers(1, &normalbuffer);
+
 }
