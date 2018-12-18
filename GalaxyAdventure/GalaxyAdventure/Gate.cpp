@@ -10,15 +10,18 @@
 #include "ColBox.h"
 
 
+float scaleFactor = 5.5f;
+
 /** Constructor
 *
 *	@param	filename	path to the object file.
 *	@param	renderer	holds the 3 matrices Model, View, Perspective information.
 *
 */
-Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer), box1(5, 5, 5)
+Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer)
 {
-
+	
+	
 }
 
 /** Draws the object and aligns it.
@@ -27,9 +30,8 @@ Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, 
 *
 */
 void Gate::draw(glm::mat4 &Model)
-{
-
-	float scaleFactor = 5.5f;
+{	
+	scaleFactor = 5.5f;
 	float angleY = 90.0f;
 
 	glm::mat4 Save = Model;
@@ -40,6 +42,21 @@ void Gate::draw(glm::mat4 &Model)
 	m_renderer.sendMVP(Model);
 	RenderedObject::drawVertices(Model);
 	Model = Save;
+}
+
+ColBox Gate::getColBox()
+{
+	return mainBox;
+}
+
+void Gate::setColBox(ColBox b)
+{
+	mainBox = b;
+}
+
+float Gate::getScaleF()
+{
+	return scaleFactor;
 }
 
 /** Destructor of Gate object

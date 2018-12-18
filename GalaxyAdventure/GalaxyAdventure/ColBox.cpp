@@ -1,19 +1,28 @@
 #include "ColBox.h"
 
 
+/*
+Klasse: ColBox
 
-float colX, colY, colZ;
+KollisonsBox in Form eines Würfels.
+x,y,z ist der erste Punkt des Würfels
+cX, cY, cZ ist die Größe des Würfels
+
+*/
 
 ColBox::ColBox()
 {
 
 }
 
-ColBox::ColBox(float x, float y, float z)
+ColBox::ColBox(float x, float y, float z, float cX, float cY, float cZ)
 {
-	colX = x;
-	colY = y;
-	colZ = z;
+	posX = x;
+	posY = y;
+	posZ = z;
+	colX = cX;
+	colY = cY;
+	colZ = cZ;
 }
 
 ColBox::~ColBox()
@@ -33,4 +42,19 @@ float ColBox::getColY()
 float ColBox::getColZ()
 {
 	return colZ;
+}
+
+float ColBox::getPosX()
+{
+	return posX;
+}
+
+float ColBox::getPosY()
+{
+	return posY;
+}
+
+float ColBox::getPosZ()
+{
+	return posZ;
 }

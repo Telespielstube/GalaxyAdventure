@@ -6,9 +6,13 @@ class Gate : public RenderedObject
 public:
 	// Constructor
 	Gate(const char *filename, Renderer &renderer);
-
 	virtual ~Gate();
-	virtual void draw(glm::mat4 & Model);
-	ColBox box1;
+	virtual void draw(glm::mat4 & Model);	
+	ColBox getColBox();
+	void setColBox(ColBox b);
+	float getScaleF();
+
+private:
+	ColBox mainBox;
 };
 

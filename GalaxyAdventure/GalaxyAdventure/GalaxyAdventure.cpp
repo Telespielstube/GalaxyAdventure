@@ -13,6 +13,7 @@
 #include "Controls.h"
 #include "Gate.h"
 #include "RandomNumber.h"
+#include "cube.h"
 
 // Global variables
 GLFWwindow *window;
@@ -63,6 +64,18 @@ GLFWwindow *createMainWindow(int width, int height, const char *title, int xPosi
 	return window;
 }
 
+bool colDetection(ColBox box1, ColBox box2) {
+	if (box1.getPosX() + box1.getColX() >= box2.getPosX() && box2.getPosX() + box2.getColX() >= box1.getPosX() &&
+		box1.getPosY() + box1.getColY() >= box2.getPosY() && box2.getPosY() + box2.getColY() >= box1.getPosY() &&
+		box1.getPosZ() + box1.getColZ() >= box2.getPosZ() && box2.getPosZ() + box2.getColZ() >= box1.getPosZ()) {
+		//std::cout << box1.getPosX()<< ">=" << box2.getPosX() << std::endl;
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
 
 int main()
 {
@@ -116,19 +129,31 @@ int main()
 	float min = .0f;
 	std::vector<Gate*> gateList;
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		max = 4.0f - ((float)rand()) / (float)RAND_MAX;
 		min = -4.0f + ((float)rand()) / (float)RAND_MAX;
 		gate = new Gate("Gate.obj", modelRenderer);
 		gateList.push_back(gate);
 		
+		/*
+		// Random Gate Position
 		gate->setPosition((randomNumber.generateRandomNumber(max, min)),
 						(randomNumber.generateRandomNumber(max, min)),
 						newPosition);
+		*/
+
+		// Für Testzwecke Gates in einer reihe
+		gate->setPosition(0, 0 ,0 - (i * 3));
+
 		newPosition -= 5.0f;
 		gate->setXAngle(-5.0f); // rotates gate
 		gate->setYAngle(90.0f); // rotates gate
+
+		// Erzeugt die KollisionsBox um das Gate
+		gate->setColBox(ColBox(gate->getXPosition()*gate->getScaleF()-1, gate->getYPosition()*gate->getScaleF()-1.5, gate->getZPosition()*gate->getScaleF(), 2.5 * gate->getScaleF(), 2 * gate->getScaleF(), 0.5 * gate->getScaleF()));
+		//std::cout << gate->getColBox().getPosX() << " " << gate->getColBox().getPosY() << " " << gate->getColBox().getPosZ() << std::endl;
+		
 	}
 	
 	spaceShip.setPosition(.0f, .0f, 13.5f);
@@ -138,6 +163,9 @@ int main()
 	float colDZ = 5.0f;
 	float colDY = 5.0f;
 	float colL = 4.2f;
+
+	ColBox *box2 = new ColBox{ 0,0,0,10,10,4 };
+	ColBox *box3 = new ColBox{ 2,0,5,2,2,2 };
 	
 	//Game loop
 	do
@@ -146,44 +174,40 @@ int main()
 		float spaceShipOnX = controls.moveSpaceshipOnX(window);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window);
+
 		//Light source
 		glm::vec4 lightPositionWorld = Model * glm::vec4(0, 8.0, -2.0f, 1);
 		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
-
-		for (int i = 0; i < 5; i++)
-		{
-			Gate *currentGate = gateList.at(i);
-			// Collisonsabfrage
-			//float currentShipZPos = spaceShip.getZPosition(); // Machs doch so ist kuerzer
-			if (spaceShip.getZPosition() + spaceShipOnZ <= currentGate->getZPosition() + colDZ && spaceShip.getZPosition() + spaceShipOnZ >= currentGate->getZPosition() - colDZ && spaceShip.getXPosition() + spaceShipOnX <= currentGate->getXPosition() + colDX + 2 && spaceShip.getXPosition() + spaceShipOnX >= currentGate->getXPosition() - colDX && spaceShip.getYPosition() + spaceShipOnY <= currentGate->getYPosition() + colDY + 3 && spaceShip.getYPosition() + spaceShipOnY >= currentGate->getYPosition() - colDY)
-			{
-				if (spaceShip.getZPosition() + spaceShipOnZ <= currentGate->getZPosition() + colDZ + colL && spaceShip.getZPosition() + spaceShipOnZ >= currentGate->getZPosition() - colDZ - colL && spaceShip.getXPosition() + spaceShipOnX <= currentGate->getXPosition() + colDX + 2 - colL - 3 && spaceShip.getXPosition() + spaceShipOnX >= currentGate->getXPosition() - colDX + colL + 3 && spaceShip.getYPosition() + spaceShipOnY <= currentGate->getYPosition() + colDY + 3 - colL && spaceShip.getYPosition() + spaceShipOnY >= currentGate->getYPosition() - colDY + colL)
-				{
-					spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
-				}
-				spaceShip.setPosition((spaceShip.getXPosition()), (spaceShip.getYPosition()), (spaceShip.getZPosition()));
-			}
-			else {
-				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
-			}
-		}
-
 		
 
-/*
-		if (spaceShip.getZPosition() + spaceShip.box1.getColZ() <= gate.getZPosition() + gate.box1.getColZ() && spaceShip.getZPosition() + spaceShip.box1.getColZ() >= gate.getZPosition() - gate.box1.getColZ()) {
-			spaceShip.setPosition((spaceShip.getXPosition()), (spaceShip.getYPosition()), (spaceShip.getZPosition()));
-		}
-		else {
-			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+		//schreibt die Akktuelle Position des Schiffes auf die Konsole
+		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
+		
+		
+		
+		bool collision = false;
 
-		}
-*/
-		spaceShip.draw(Model);
+		// Geht die Gates durch
 		for (int i = 0; i < 5; i++)
 		{
-			gateList.at(i)->draw(Model);
+			Gate *g(gateList.at(i));
+			ColBox b = g->getColBox();			
+			// Collisionsdetection
+			if (colDetection(gateList.at(i)->getColBox(), ColBox{ spaceShip.getXPosition() + spaceShipOnX,spaceShip.getYPosition() + spaceShipOnY, spaceShip.getZPosition() + spaceShipOnZ,1,1,1 })) {
+				collision = true;				
+			}			
+			// Zeichnet Gate
+			g->draw(Model);
 		}
+		
+		// Wenn keine Kollision = Schiff bewegen
+		if (!collision) {
+			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+		}
+
+		// Zeichnet Schiff
+		spaceShip.draw(Model);
+		
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
