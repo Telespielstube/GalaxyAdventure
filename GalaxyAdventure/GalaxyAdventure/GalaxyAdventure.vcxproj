@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="ColBox.cpp" />
     <ClCompile Include="Controls.cpp" />
+    <ClCompile Include="cube.cpp" />
     <ClCompile Include="GalaxyAdventure.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="objloader.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="ColBox.h" />
     <ClInclude Include="Controls.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="objloader.h" />
     <ClInclude Include="RandomNumber.h" />

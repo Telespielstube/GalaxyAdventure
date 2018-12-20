@@ -24,8 +24,8 @@ cube::cube(float posX, float posY, float posZ, float disX, float disY, float dis
 	VertexArrayIDWireCube = 0;
 }
 
-void cube::drawCube(int id){	
-	VertexArrayIDWireCube = id;
+void cube::drawCube(){	
+	
 	if (!VertexArrayIDWireCube)
 	{
 		// Vertexarrays kapseln ab OpenGL3 Eckpunkte, Texturen und Normalen

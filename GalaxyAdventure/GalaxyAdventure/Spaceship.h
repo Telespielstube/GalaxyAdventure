@@ -16,7 +16,7 @@ public:
 	// Destructor
 	virtual ~Spaceship();
 
-	virtual void draw(glm::mat4 &Model);
+	virtual void draw(glm::mat4 &Model, float programID);
 
 	ColBox box1;
 };

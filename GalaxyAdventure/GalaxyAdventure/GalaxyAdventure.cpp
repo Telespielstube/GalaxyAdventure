@@ -22,6 +22,10 @@ glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 
+float angleX;
+float angleY;
+float angleZ;
+
 //Initializes the OpenGL library GLFW.
 bool initializeGLFW()
 {
@@ -106,24 +110,34 @@ int main()
 	//GLuint Texture = loadBMP_custom("shipTexture.bmp");
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
 	glDepthFunc(GL_LESS);
 	glDisable(GL_CULL_FACE);
 	glUseProgram(programID);
+	glMatrixMode(GL_MODELVIEW);
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	Projection = glm::perspective(80.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	// Camera matrix
+	
+	glm::vec3 cameraPos = glm::vec3(0, 7, 12);
+	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1);
+	glm::vec3 cameraUp = glm::vec3(0.0f, 3.0f, 0.0f);
+
+	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	
+
+/*	// Camera matrix
 	View = glm::lookAt(
 		glm::vec3(0, 20, 20),
 		glm::vec3(0.0f, 0.0f, 0.0),
 		glm::vec3(0, 1, 0)
 	);
-
-	
+*/
 
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
 	Spaceship spaceShip("Ship.obj", modelRenderer);
+	
 	Gate *gate;
 	RandomNumber randomNumber;
 	Controls controls;
@@ -135,6 +149,7 @@ int main()
 	float min = .0f;
 	std::vector<Gate*> gateList;
 
+	
 	
 
 	for (int i = 0; i < 5; i++)
@@ -152,7 +167,7 @@ int main()
 		*/
 
 		// Für Testzwecke Gates in einer reihe
-		gate->setPosition(0, 0 ,0 - (i * 14));
+		gate->setPosition(0, 0 ,-10 - (i * 14));
 
 		newPosition -= 5.0f;
 		gate->setXAngle(-5.0f); // rotates gate
@@ -160,21 +175,35 @@ int main()
 
 		// Erzeugt die KollisionsBox um das Gate
 		// Erste KollisionsBox ist über das Ganze Gate
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5, gate->getYPosition()*gate->getScaleF()-5, gate->getZPosition()*gate->getScaleF()-1, 10 * gate->getScaleF(), 10 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3, gate->getYPosition()*gate->getScaleF() - 5, gate->getZPosition()*gate->getScaleF() - 1, 6 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3, gate->getYPosition()*gate->getScaleF() + 4, gate->getZPosition()*gate->getScaleF() - 1, 6 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4, gate->getYPosition()*gate->getScaleF() + 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 4, gate->getYPosition()*gate->getScaleF() + 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4, gate->getYPosition()*gate->getScaleF() - 4, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 4, gate->getYPosition()*gate->getScaleF() - 4, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5, gate->getYPosition()*gate->getScaleF() - 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 5 * gate->getScaleF(), 2 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 5, gate->getYPosition()*gate->getScaleF() - 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 5 * gate->getScaleF(), 2 * gate->getScaleF()));
-		std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
+		float s = 1.08;
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5 * s, gate->getYPosition()*gate->getScaleF() - 5 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 10 * gate->getScaleF(), 10 * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 1.5* s, gate->getYPosition()*gate->getScaleF() - 4 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 3 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3 * s, gate->getYPosition()*gate->getScaleF() - 3.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 1.5* s, gate->getYPosition()*gate->getScaleF() - 3.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5f* s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3.5* s, gate->getYPosition()*gate->getScaleF() - 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 2.5* s, gate->getYPosition()*gate->getScaleF() - 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() - 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 0.5f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3 * s, gate->getYPosition()*gate->getScaleF() - 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 0.5f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() - 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 2 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3.5* s, gate->getYPosition()*gate->getScaleF() - 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 0.5* s * gate->getScaleF(), 2 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() + 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s *gate->getScaleF(), 0.5 * s* gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3 * s, gate->getYPosition()*gate->getScaleF() +1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s* gate->getScaleF(), 0.5* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3.5* s, gate->getYPosition()*gate->getScaleF() +1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 2.5* s, gate->getYPosition()*gate->getScaleF() + 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3 * s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s* gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 1.5* s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 1.5* s, gate->getYPosition()*gate->getScaleF() + 3 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 3 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		
+		
+		//std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
 		
 	}
 	
-	spaceShip.setPosition(.0f, .0f, 13.5f);
+	
 
+	spaceShip.setPosition(.0f, .0f, 0.0f);
+
+	
 	
 	//Game loop
 	do
@@ -183,10 +212,26 @@ int main()
 		float spaceShipOnX = controls.moveSpaceshipOnX(window);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window);
+		float angleX = controls.CamOnX(window);
+		float angleY = controls.CamOnY(window);
+
+		
+		
+
+		glm::mat4 Save = Model;
+		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
+	
+		//Model = glm::scale(Model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
+		
+		
+
+		modelRenderer.sendMVP(Model);
+
+		
 
 		//Light source
-		glm::vec4 lightPositionWorld = Model * glm::vec4(0, 8.0, -2.0f, 1);
-		glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
+		//glm::vec4 lightPositionWorld = Model * glm::vec4(1, 16.0, -2.0f, 1);
+		//glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
 		
 
 		//schreibt die Akktuelle Position des Schiffes auf die Konsole
@@ -197,9 +242,10 @@ int main()
 
 		// Kollisionsboxen für das Schiff. 
 		// TODO. vll auch eine Main Kollisionsbox erstellen über das ganze Schiff.
-		ColBox *colShip = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 1, spaceShip.getYPosition() + spaceShipOnY -0.5f, spaceShip.getZPosition() + spaceShipOnZ - 2,2,1,4 };
-		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 3, spaceShip.getYPosition() + spaceShipOnY - 0.5f, spaceShip.getZPosition() + spaceShipOnZ + 0.5f,6,1,1 };
-
+		ColBox *colShip = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 0.7f, spaceShip.getYPosition() + spaceShipOnY + 0.2f, spaceShip.getZPosition() + spaceShipOnZ - 2,1.7f,0.6f,4 };
+		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 2.8f, spaceShip.getYPosition() + spaceShipOnY + 0.2f, spaceShip.getZPosition() + spaceShipOnZ + 0.5f,6.0f,0.6f,1 };
+	
+		Model = Save;
 		// Geht die Gates durch
 		for (int i = 0; i < 5; i++)
 		{
@@ -219,11 +265,18 @@ int main()
 						
 			// Zeichnet Gate
 			g->draw(Model);
+			Model = Save;			
+			
 		}
 		
+
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
-			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));				
+			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));	
+			// Zeichnet Schiff
+			spaceShip.draw(Model, programID);
+			Model = Save;
+			Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
 		} else {
 			bool collision = false;
 			Gate *g(gateList.at(objID));
@@ -240,13 +293,33 @@ int main()
 			}
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
-				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));		
+				// Zeichnet Schiff
+				spaceShip.draw(Model,programID);
+				Model = Save;
+				Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
 			}
-		}
+			else {
+				spaceShip.draw(Model, programID);
+				Model = Save;
 
-		// Zeichnet Schiff
-		spaceShip.draw(Model);
+			}
+		}	
 		
+		Model = glm::rotate(Model, angleX, glm::vec3(0, 1, 0));
+		Model = glm::rotate(Model, angleY, glm::vec3(1, 0, 0));
+		Model = glm::rotate(Model, angleZ, glm::vec3(0, 0, 1));
+		//glm::vec3 l = glm::vec3(spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition()+300);
+		glUniform3f(0, 0, 0, -3);
+		
+		
+		
+		
+		
+
+		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
+
+		glFlush();
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();

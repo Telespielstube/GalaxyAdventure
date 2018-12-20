@@ -3,7 +3,7 @@ class cube
 {
 public:
 	cube(float, float, float, float, float, float);
-	void drawCube(int);
+	void drawCube();
 	~cube();
 	float getColX();
 	float getColY();

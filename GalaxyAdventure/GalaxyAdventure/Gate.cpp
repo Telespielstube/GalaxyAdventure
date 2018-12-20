@@ -32,7 +32,6 @@ Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, 
 void Gate::draw(glm::mat4 &Model)
 {	
 	float angleY = 90.0f;
-
 	glm::mat4 Save = Model;
 	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));

@@ -8,6 +8,8 @@
 #include "objloader.h"
 #include "ColBox.h"
 #include "objects.hpp"
+#include "Controls.h"
+
 
 
 
@@ -28,14 +30,13 @@ Spaceship::Spaceship(const char *filename, Renderer &renderer) : RenderedObject(
 Spaceship::~Spaceship() {}
 
 
-void Spaceship::draw(glm::mat4 & Model)
+void Spaceship::draw(glm::mat4 & Model, float programID)
 {	
-	
 	glm::mat4 Save = Model;
-	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));
-	m_renderer.sendMVP(Model);
+	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));	
+	m_renderer.sendMVP(Model);	
 	RenderedObject::drawVertices(Model);
-	Model = Save;
+	Model = Save;	
 	
 }
 
