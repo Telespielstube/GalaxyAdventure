@@ -7,7 +7,7 @@ Controls::Controls()
 }
 
 
-float speed = 0.006f;
+float speed = 0.022f;
 /** Moves the spaceship on the x axis.
 *	
 */

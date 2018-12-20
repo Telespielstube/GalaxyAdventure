@@ -7,12 +7,12 @@ public:
 	// Constructor
 	Gate(const char *filename, Renderer &renderer);
 	virtual ~Gate();
-	virtual void draw(glm::mat4 & Model);	
-	ColBox getColBox();
-	void setColBox(ColBox b);
-	float getScaleF();
+	virtual void draw(glm::mat4 & Model);	// Zeichnet das Tor.
+	std::vector <ColBox*> getColBox();	// Speichert die Kolisionsboxen in einem Array, Index 0 = Main Kollisonsbox um das Gate
+	void addColBox(ColBox *b);  // Zum hinzufügen von Kollisionsboxen.
+	float getScaleF(); // Gibt den Scalefactor zurück
 
 private:
-	ColBox mainBox;
+	std::vector<ColBox*> colBoxList;
 };
 

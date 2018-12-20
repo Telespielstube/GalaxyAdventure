@@ -64,6 +64,10 @@ GLFWwindow *createMainWindow(int width, int height, const char *title, int xPosi
 	return window;
 }
 
+/** Kollisionsdetection
+*
+*	Prüft zwei übergebene Kollisionsboxen ob sie sich berühren wenn ja wird true zurückgegben.
+*/
 bool colDetection(ColBox box1, ColBox box2) {
 	if (box1.getPosX() + box1.getColX() >= box2.getPosX() && box2.getPosX() + box2.getColX() >= box1.getPosX() &&
 		box1.getPosY() + box1.getColY() >= box2.getPosY() && box2.getPosY() + box2.getColY() >= box1.getPosY() &&
@@ -108,12 +112,14 @@ int main()
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	Projection = glm::perspective(80.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	// Camera matrix		
+	// Camera matrix
 	View = glm::lookAt(
 		glm::vec3(0, 20, 20),
-		glm::vec3(0, 0, 0),
+		glm::vec3(0.0f, 0.0f, 0.0),
 		glm::vec3(0, 1, 0)
 	);
+
+	
 
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
@@ -128,6 +134,8 @@ int main()
 	float max = .0f;
 	float min = .0f;
 	std::vector<Gate*> gateList;
+
+	
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -144,28 +152,29 @@ int main()
 		*/
 
 		// Für Testzwecke Gates in einer reihe
-		gate->setPosition(0, 0 ,0 - (i * 3));
+		gate->setPosition(0, 0 ,0 - (i * 14));
 
 		newPosition -= 5.0f;
 		gate->setXAngle(-5.0f); // rotates gate
 		gate->setYAngle(90.0f); // rotates gate
 
 		// Erzeugt die KollisionsBox um das Gate
-		gate->setColBox(ColBox(gate->getXPosition()*gate->getScaleF()-1, gate->getYPosition()*gate->getScaleF()-1.5, gate->getZPosition()*gate->getScaleF(), 2.5 * gate->getScaleF(), 2 * gate->getScaleF(), 0.5 * gate->getScaleF()));
-		//std::cout << gate->getColBox().getPosX() << " " << gate->getColBox().getPosY() << " " << gate->getColBox().getPosZ() << std::endl;
+		// Erste KollisionsBox ist über das Ganze Gate
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5, gate->getYPosition()*gate->getScaleF()-5, gate->getZPosition()*gate->getScaleF()-1, 10 * gate->getScaleF(), 10 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3, gate->getYPosition()*gate->getScaleF() - 5, gate->getZPosition()*gate->getScaleF() - 1, 6 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3, gate->getYPosition()*gate->getScaleF() + 4, gate->getZPosition()*gate->getScaleF() - 1, 6 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4, gate->getYPosition()*gate->getScaleF() + 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 4, gate->getYPosition()*gate->getScaleF() + 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4, gate->getYPosition()*gate->getScaleF() - 4, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 4, gate->getYPosition()*gate->getScaleF() - 4, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 1 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5, gate->getYPosition()*gate->getScaleF() - 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 5 * gate->getScaleF(), 2 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 5, gate->getYPosition()*gate->getScaleF() - 3, gate->getZPosition()*gate->getScaleF() - 1, 1 * gate->getScaleF(), 5 * gate->getScaleF(), 2 * gate->getScaleF()));
+		std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
 		
 	}
 	
 	spaceShip.setPosition(.0f, .0f, 13.5f);
 
-	// Collisions Distanz
-	float colDX = 7.0f;
-	float colDZ = 5.0f;
-	float colDY = 5.0f;
-	float colL = 4.2f;
-
-	ColBox *box2 = new ColBox{ 0,0,0,10,10,4 };
-	ColBox *box3 = new ColBox{ 2,0,5,2,2,2 };
 	
 	//Game loop
 	do
@@ -182,27 +191,57 @@ int main()
 
 		//schreibt die Akktuelle Position des Schiffes auf die Konsole
 		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
-		
-		
-		
+				
 		bool collision = false;
+		int objID = -1;
+
+		// Kollisionsboxen für das Schiff. 
+		// TODO. vll auch eine Main Kollisionsbox erstellen über das ganze Schiff.
+		ColBox *colShip = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 1, spaceShip.getYPosition() + spaceShipOnY -0.5f, spaceShip.getZPosition() + spaceShipOnZ - 2,2,1,4 };
+		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 3, spaceShip.getYPosition() + spaceShipOnY - 0.5f, spaceShip.getZPosition() + spaceShipOnZ + 0.5f,6,1,1 };
 
 		// Geht die Gates durch
 		for (int i = 0; i < 5; i++)
 		{
 			Gate *g(gateList.at(i));
-			ColBox b = g->getColBox();			
-			// Collisionsdetection
-			if (colDetection(gateList.at(i)->getColBox(), ColBox{ spaceShip.getXPosition() + spaceShipOnX,spaceShip.getYPosition() + spaceShipOnY, spaceShip.getZPosition() + spaceShipOnZ,1,1,1 })) {
-				collision = true;				
-			}			
+			std::vector <ColBox*> l = g->getColBox();
+			ColBox *b = l[0];
+			// Collisionsdetection 
+			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates
+			if (colDetection(*b, *colShip )) {
+				collision = true;
+				objID = i;
+			}
+			if (colDetection(*b, *colShip2)) {
+				collision = true;
+				objID = i;
+			}
+						
 			// Zeichnet Gate
 			g->draw(Model);
 		}
 		
-		// Wenn keine Kollision = Schiff bewegen
+		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
-			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));				
+		} else {
+			bool collision = false;
+			Gate *g(gateList.at(objID));
+			std::vector <ColBox*> colBoxList = g->getColBox();	
+			// Prüft die Kleineren Kollisionsboxen um das Gate.
+			for (int i = 1; i < colBoxList.size(); i++) {				
+				if (colDetection(*colBoxList[i], *colShip)) {
+					collision = true;					
+				}
+				if (colDetection(*colBoxList[i], *colShip2)) {
+					collision = true;
+					
+				}
+			}
+			// Wenn keine Kollision = Schiff bewegen
+			if (!collision) {
+				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+			}
 		}
 
 		// Zeichnet Schiff

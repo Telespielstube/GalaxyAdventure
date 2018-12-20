@@ -10,7 +10,7 @@
 #include "ColBox.h"
 
 
-float scaleFactor = 5.5f;
+float scaleFactor = 1.0f;
 
 /** Constructor
 *
@@ -31,7 +31,6 @@ Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, 
 */
 void Gate::draw(glm::mat4 &Model)
 {	
-	scaleFactor = 5.5f;
 	float angleY = 90.0f;
 
 	glm::mat4 Save = Model;
@@ -44,14 +43,14 @@ void Gate::draw(glm::mat4 &Model)
 	Model = Save;
 }
 
-ColBox Gate::getColBox()
+std::vector <ColBox*> Gate::getColBox()
 {
-	return mainBox;
+	return colBoxList;
 }
 
-void Gate::setColBox(ColBox b)
+void Gate::addColBox(ColBox *b)
 {
-	mainBox = b;
+	colBoxList.push_back(b);
 }
 
 float Gate::getScaleF()
