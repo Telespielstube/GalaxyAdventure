@@ -20,9 +20,11 @@
 *	@param	renderer	holds the 3 matrices Model, View, Perspective information.
 *
 */
-Spaceship::Spaceship(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer), box1(-1,0,-2, 2, 2, 5)
+Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID) : RenderedObject(filename, renderer), box1(-1,0,-2, 2, 2, 5)
 {
-
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, shipTexture);
+	glUniform1i(TextureID, 0);
 }
 
 /** Destructor
@@ -36,8 +38,7 @@ void Spaceship::draw(glm::mat4 & Model, float programID)
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));	
 	m_renderer.sendMVP(Model);	
 	RenderedObject::drawVertices(Model);
-	Model = Save;	
-	
+	Model = Save;
 }
 
 

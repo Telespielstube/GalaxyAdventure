@@ -11,7 +11,7 @@ class Spaceship : public RenderedObject
 {
 public:
 	// Constructor
-	Spaceship(const char *filename, Renderer &renderer);
+	Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID);
 
 	// Destructor
 	virtual ~Spaceship();

@@ -107,8 +107,8 @@ int main()
 
 
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-	//GLuint Texture = loadBMP_custom("shipTexture.bmp");
-
+	GLuint shipTexture = loadBMP_custom("shipTexture.bmp");
+	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDepthFunc(GL_LESS);
@@ -136,7 +136,7 @@ int main()
 
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
-	Spaceship spaceShip("Ship.obj", modelRenderer);
+	Spaceship spaceShip("Ship.obj", modelRenderer, shipTexture, TextureID);
 	
 	Gate *gate;
 	RandomNumber randomNumber;
@@ -144,13 +144,9 @@ int main()
 
 	// Array of gates and random positions. 
 	randomNumber.initializeGenerator();
-	float newPosition = -2.5f;
 	float max = .0f;
 	float min = .0f;
 	std::vector<Gate*> gateList;
-
-	
-	
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -169,7 +165,6 @@ int main()
 		// Für Testzwecke Gates in einer reihe
 		gate->setPosition(0, 0 ,-10 - (i * 14));
 
-		newPosition -= 5.0f;
 		gate->setXAngle(-5.0f); // rotates gate
 		gate->setYAngle(90.0f); // rotates gate
 

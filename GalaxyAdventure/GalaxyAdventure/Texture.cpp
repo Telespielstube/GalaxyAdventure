@@ -20,7 +20,6 @@ GLuint loadBMP_custom(const char * imagepath) {
 	// Actual RGB data
 	unsigned char * data;
 
-	// Open the file
 	FILE * file = fopen(imagepath, "rb");
 	if (!file) { printf("%s could not be opened. Are you in the right directory ? Don't forget to read the FAQ !\n", imagepath); getchar(); return 0; }
 
@@ -50,7 +49,6 @@ GLuint loadBMP_custom(const char * imagepath) {
 	if (imageSize == 0)    imageSize = width * height * 3; // 3 : one byte for each Red, Green and Blue component
 	if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
 
-	// Create a buffer
 	data = new unsigned char[imageSize];
 
 	// Read the actual data from the file into the buffer
@@ -72,18 +70,13 @@ GLuint loadBMP_custom(const char * imagepath) {
 	// OpenGL has now copied the data. Free our own version
 	delete[] data;
 
-	// Poor filtering, or ...
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-
-	// ... nice trilinear filtering.
+	// Trilinear filtering.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	// Return the ID of the texture we just created
 	return textureID;
 }
 

@@ -33,6 +33,9 @@ protected:
 	GLuint normalbuffer;
 	GLuint uvbuffer;
 
+	GLuint texture;
+	GLuint textureID;
+
 	float xPosition;
 	float yPosition;
 	float zPosition;
