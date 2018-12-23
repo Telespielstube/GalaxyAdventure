@@ -18,9 +18,10 @@ float scaleFactor = 1.0f;
 *	@param	renderer	holds the 3 matrices Model, View, Perspective information.
 *
 */
-Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, renderer)
+Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint TextureID) : RenderedObject(filename, renderer)
 {
-	
+	texture = gateTexture;
+	textureID = TextureID;
 	
 }
 
@@ -31,6 +32,9 @@ Gate::Gate(const char *filename, Renderer &renderer) : RenderedObject(filename, 
 */
 void Gate::draw(glm::mat4 &Model)
 {	
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(textureID, 0);
 	float angleY = 90.0f;
 	glm::mat4 Save = Model;
 	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));

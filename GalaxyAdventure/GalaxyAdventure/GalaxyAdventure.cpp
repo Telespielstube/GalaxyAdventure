@@ -100,15 +100,15 @@ int main()
 	}
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-
-	// Dark blue background
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.4f, 0.0);
 	
-
-
+	// Loads shaders and textures.
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-	GLuint shipTexture = loadBMP_custom("shipTexture.bmp");
-	GLuint TextureID = glGetUniformLocation(programID, "myTextureSampler");
+	GLuint shipTexture = loadBMP("shipTexture.bmp");
+	GLuint TextureID = glGetUniformLocation(programID, "objectTexture");
+	GLuint gateTexture = loadBMP("gateTexture.bmp");
+	GLuint gateTextureID = glGetUniformLocation(programID, "objectTexture");
+	
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 	glDepthFunc(GL_LESS);
@@ -122,22 +122,11 @@ int main()
 	glm::vec3 cameraPos = glm::vec3(0, 7, 12);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 3.0f, 0.0f);
-
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-	
-
-/*	// Camera matrix
-	View = glm::lookAt(
-		glm::vec3(0, 20, 20),
-		glm::vec3(0.0f, 0.0f, 0.0),
-		glm::vec3(0, 1, 0)
-	);
-*/
 
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
 	Spaceship spaceShip("Ship.obj", modelRenderer, shipTexture, TextureID);
-	
 	Gate *gate;
 	RandomNumber randomNumber;
 	Controls controls;
@@ -152,7 +141,7 @@ int main()
 	{
 		max = 4.0f - ((float)rand()) / (float)RAND_MAX;
 		min = -4.0f + ((float)rand()) / (float)RAND_MAX;
-		gate = new Gate("Gate.obj", modelRenderer);
+		gate = new Gate("Gate.obj", modelRenderer, gateTexture, gateTextureID);
 		gateList.push_back(gate);
 		
 		/*
@@ -165,8 +154,8 @@ int main()
 		// Für Testzwecke Gates in einer reihe
 		gate->setPosition(0, 0 ,-10 - (i * 14));
 
-		gate->setXAngle(-5.0f); // rotates gate
-		gate->setYAngle(90.0f); // rotates gate
+		gate->setXAngle(-5.0f); 
+		gate->setYAngle(90.0f); 
 
 		// Erzeugt die KollisionsBox um das Gate
 		// Erste KollisionsBox ist über das Ganze Gate
@@ -188,17 +177,12 @@ int main()
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3 * s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s* gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 1.5* s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 1.5* s, gate->getYPosition()*gate->getScaleF() + 3 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 3 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
-		
-		
+				
 		//std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
 		
 	}
-	
-	
 
 	spaceShip.setPosition(.0f, .0f, 0.0f);
-
-	
 	
 	//Game loop
 	do
@@ -210,28 +194,11 @@ int main()
 		float angleX = controls.CamOnX(window);
 		float angleY = controls.CamOnY(window);
 
-		
-		
-
 		glm::mat4 Save = Model;
 		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
 	
-		//Model = glm::scale(Model, glm::vec3(1.0 / 1000.0, 1.0 / 1000.0, 1.0 / 1000.0));
+		modelRenderer.sendMVP(Model);	
 		
-		
-
-		modelRenderer.sendMVP(Model);
-
-		
-
-		//Light source
-		//glm::vec4 lightPositionWorld = Model * glm::vec4(1, 16.0, -2.0f, 1);
-		//glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
-		
-
-		//schreibt die Akktuelle Position des Schiffes auf die Konsole
-		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
-				
 		bool collision = false;
 		int objID = -1;
 
@@ -305,12 +272,7 @@ int main()
 		Model = glm::rotate(Model, angleY, glm::vec3(1, 0, 0));
 		Model = glm::rotate(Model, angleZ, glm::vec3(0, 0, 1));
 		//glm::vec3 l = glm::vec3(spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition()+300);
-		glUniform3f(0, 0, 0, -3);
-		
-		
-		
-		
-		
+		glUniform3f(0, 0, 0, -3);		
 
 		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
 

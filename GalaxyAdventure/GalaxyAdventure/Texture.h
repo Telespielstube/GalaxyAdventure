@@ -3,6 +3,6 @@
 
 
 // Load a .BMP file using our custom loader
-GLuint loadBMP_custom(const char * imagepath);
+GLuint loadBMP(const char * imagepath);
 
 #endif

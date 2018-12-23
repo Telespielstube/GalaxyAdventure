@@ -22,9 +22,12 @@
 */
 Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID) : RenderedObject(filename, renderer), box1(-1,0,-2, 2, 2, 5)
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, shipTexture);
-	glUniform1i(TextureID, 0);
+	texture = shipTexture;
+	textureID = TextureID;
+
+
+
+
 }
 
 /** Destructor
@@ -34,6 +37,9 @@ Spaceship::~Spaceship() {}
 
 void Spaceship::draw(glm::mat4 & Model, float programID)
 {	
+	glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glUniform1i(textureID, 0);
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));	
 	m_renderer.sendMVP(Model);	
