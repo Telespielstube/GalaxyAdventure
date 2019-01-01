@@ -10,10 +10,6 @@
 #include "objects.hpp"
 #include "Controls.h"
 
-
-
-
-
 /** Constructor
 *
 *	@param	filename	path to the object file.
@@ -24,10 +20,6 @@ Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTextur
 {
 	texture = shipTexture;
 	textureID = TextureID;
-
-
-
-
 }
 
 /** Destructor
@@ -40,6 +32,9 @@ void Spaceship::draw(glm::mat4 & Model, float programID)
 	glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(textureID, 0);
+	glm::vec3 lightPos = glm::vec3(.0, 7.0, .0);
+	glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));	
 	m_renderer.sendMVP(Model);	

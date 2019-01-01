@@ -144,6 +144,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Spaceship.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="WindowInit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColBox.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Spaceship.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="WindowInit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
