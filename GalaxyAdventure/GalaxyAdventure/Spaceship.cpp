@@ -32,8 +32,8 @@ void Spaceship::draw(glm::mat4 & Model, float programID)
 	glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(textureID, 0);
-	glm::vec3 lightPos = glm::vec3(.0, 7.0, .0);
-	glUniform3f(glGetUniformLocation(programID, "LightPosition_worldspace"), lightPos.x, lightPos.y, lightPos.z);
+	glm::vec3 lightPositionSpaceship = glm::vec3(.0, 6.0, .0);
+	glUniform3f(glGetUniformLocation(programID, "LightPositionSpaceship"), lightPositionSpaceship.x, lightPositionSpaceship.y, lightPositionSpaceship.z);
 
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));	

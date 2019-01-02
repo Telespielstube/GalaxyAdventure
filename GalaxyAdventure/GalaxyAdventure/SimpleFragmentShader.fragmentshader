@@ -13,7 +13,7 @@ out vec3 color;
 // Values that stay constant for the whole mesh.
 uniform sampler2D objectTexture;
 uniform mat4 MV;
-uniform vec3 LightPosition_worldspace;
+uniform vec3 LightPositionSpaceship;
 
 void main()
 {
@@ -26,7 +26,7 @@ void main()
 	vec3 MaterialSpecularColor = vec3(1.0, 1.0, 1.0);
 
 	// Distance to the light
-	float distance = length( LightPosition_worldspace - Position_worldspace );
+	float distance = length( LightPositionSpaceship - Position_worldspace );
 
 	// Normal of the computed fragment, in camera space
 	vec3 normal = normalize(Normal_cameraspace);
