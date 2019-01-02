@@ -7,12 +7,11 @@ Controls::Controls()
 }
 
 
-float speed = 0.30f;
 
 /** Moves the spaceship on the x axis.
 *	
 */
-float Controls::moveSpaceshipOnX(GLFWwindow *window)
+float Controls::moveSpaceshipOnX(GLFWwindow *window, float speed)
 {
 	float positionX = .0f;
 
@@ -31,7 +30,7 @@ float Controls::moveSpaceshipOnX(GLFWwindow *window)
 /** Moves the spaceship on the y axis.
 *
 */
-float Controls::moveSpaceshipOnY(GLFWwindow *window)
+float Controls::moveSpaceshipOnY(GLFWwindow *window, float speed)
 {
 	float positionY = .0f;
 
@@ -49,7 +48,7 @@ float Controls::moveSpaceshipOnY(GLFWwindow *window)
 /** Moves the spaceship on the z axis.
 *
 */
-float Controls::moveSpaceshipOnZ(GLFWwindow *window)
+float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 {
 	float positionZ = .0f;
 
@@ -64,9 +63,9 @@ float Controls::moveSpaceshipOnZ(GLFWwindow *window)
 	return positionZ;
 }
 
-float Controls::CamOnX(GLFWwindow * window)
+float Controls::CamOnX(GLFWwindow * window, float speed)
 {
-
+	
 	float position = .0f;
 
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
@@ -82,10 +81,10 @@ float Controls::CamOnX(GLFWwindow * window)
 	return position;
 }
 
-float Controls::CamOnY(GLFWwindow * window)
+float Controls::CamOnY(GLFWwindow * window, float speed)
 {
 	float position = .0f;
-
+	
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
 	{
 		position -= speed;
@@ -99,7 +98,7 @@ float Controls::CamOnY(GLFWwindow * window)
 	return position;
 }
 
-float Controls::CamOnZ(GLFWwindow * window)
+float Controls::CamOnZ(GLFWwindow * window, float speed)
 {
 	return 0.0f;
 }

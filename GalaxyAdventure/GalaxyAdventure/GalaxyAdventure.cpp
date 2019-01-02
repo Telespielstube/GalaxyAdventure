@@ -15,6 +15,8 @@
 #include "RandomNumber.h"
 #include "cube.h"
 #include "WindowInit.h"
+#include "Windows.h"
+#include <time.h>
 
 GLuint programID;
 glm::mat4 Projection;
@@ -23,6 +25,7 @@ glm::mat4 Model;
 float angleX;
 float angleY;
 float angleZ;
+clock_t t1;
 
 /** Kollisionsdetection
 *
@@ -140,17 +143,35 @@ int main()
 	}
 
 	spaceShip.setPosition(.0f, .0f, 0.0f);
-	
+	t1 = clock();
+	float speed=0;
+	int t=0;
 	//Game loop
 	do
 	{
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		float spaceShipOnX = controls.moveSpaceshipOnX(window);
-		float spaceShipOnY = controls.moveSpaceshipOnY(window);
-		float spaceShipOnZ = controls.moveSpaceshipOnZ(window);
-		float angleX = controls.CamOnX(window);
-		float angleY = controls.CamOnY(window);
 
+		// Geschwindigkeitsberechnung
+		if (t == 200) {
+			std::cout << (clock() - t1) << std::endl;
+			speed = ((clock() - t1) / 700.0f);		
+			std::cout << (speed)  << std::endl;
+			std::cout << (((speed) * 0.05f) - 0.05f) << std::endl;
+			speed = 0.05f - (((speed) * 0.05f)-0.05f);			
+			t1 = clock();
+			std::cout << speed << std::endl;
+		}
+		if (t<201)
+			t++;
+
+
+		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
+		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
+		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
+		float angleX = controls.CamOnX(window, speed);
+		float angleY = controls.CamOnY(window, speed);
+		
 		glm::mat4 Save = Model;
 		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
 	
@@ -188,7 +209,7 @@ int main()
 			
 		}
 		
-
+		
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
 			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));	
@@ -209,6 +230,7 @@ int main()
 					collision = true;
 					
 				}
+				
 			}
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
