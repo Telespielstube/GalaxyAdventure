@@ -158,7 +158,7 @@ int main()
 			speed = ((clock() - t1) / 700.0f);		
 			std::cout << (speed)  << std::endl;
 			std::cout << (((speed) * 0.05f) - 0.05f) << std::endl;
-			speed = 0.05f - (((speed) * 0.05f)-0.05f);			
+			speed = 0.05f + (((speed) * 0.05f)-0.05f);			
 			t1 = clock();
 			std::cout << speed << std::endl;
 		}
