@@ -204,7 +204,7 @@ int main()
 			}
 						
 			// Zeichnet Gate
-			g->draw(Model);
+			g->draw(Model, programID);
 			Model = Save;			
 			
 		}
@@ -255,9 +255,15 @@ int main()
 
 		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
 
+<<<<<<< HEAD
 		// Lighting of objects and world
 		glm::vec4 lightPositionSpaceship = Model * glm::vec4(.0, 3.0, -30.0, 1);
 		glUniform3f(glGetUniformLocation(programID, "LightPositionSpaceship"), lightPositionSpaceship.x, lightPositionSpaceship.y, lightPositionSpaceship.z);
+=======
+		// Lighting of world
+		glm::vec4 lightPositionWorld = Model * glm::vec4(.0, 3.0, -30.0, 1.0);
+		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
+>>>>>>> tmp
 		
 		glFlush();
 		// Swap buffers

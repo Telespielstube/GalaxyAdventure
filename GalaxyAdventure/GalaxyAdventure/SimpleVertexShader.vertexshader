@@ -16,7 +16,11 @@ out vec3 LightDirection_cameraspace;
 uniform mat4 MVP;
 uniform mat4 V;
 uniform mat4 M;
+<<<<<<< HEAD
 uniform vec3 LightPositionSpaceship;
+=======
+uniform vec3 LightPositionWorld;
+>>>>>>> tmp
 
 void main(){
 	// Output position of the vertex, in clip space : MVP * position
@@ -33,8 +37,13 @@ void main(){
 
 
 	// Vector that goes from the vertex to the light, in camera space. M is ommited because it's identity.
+<<<<<<< HEAD
 	vec3 LightPosition_cameraspace = ( V * vec4(LightPositionSpaceship, 1)).xyz;
 	LightDirection_cameraspace = LightPositionSpaceship + EyeDirection_cameraspace;
+=======
+	vec3 LightPosition_cameraspace = ( V * vec4(LightPositionWorld, 1)).xyz;
+	LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
+>>>>>>> tmp
 	
 
 
