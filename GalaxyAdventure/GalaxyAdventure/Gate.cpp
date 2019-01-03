@@ -30,11 +30,14 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 *	@param	Model	Object to draw on screen.
 *
 */
-void Gate::draw(glm::mat4 &Model)
+void Gate::draw(glm::mat4 &Model, GLuint programID)
 {	
 	glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(textureID, 0);
+	glm::vec3 lightPositionGate = glm::vec3(5.0, 3.0, .0);
+	glUniform3f(glGetUniformLocation(programID, "LightPositionGate"), lightPositionGate.x, lightPositionGate.y, lightPositionGate.z);
+	
 	float angleY = 90.0f;
 	glm::mat4 Save = Model;
 	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
