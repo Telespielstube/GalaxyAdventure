@@ -60,7 +60,6 @@ int main()
 	}
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0);
 	
 	// Loads shaders and textures.
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
@@ -83,6 +82,7 @@ int main()
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 3.0f, 0.0f);
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	glm::vec4 lightPositionWorld = Model * glm::vec4(.0f, 30.0f, -100.0f, 1.0f);
 
 	//Create objects on stack   
 	Renderer modelRenderer(programID, Projection, View);
@@ -142,10 +142,11 @@ int main()
 		
 	}
 
-	spaceShip.setPosition(.0f, .0f, 0.0f);
+	spaceShip.setPosition(.0f, .0f, .0f);
 	t1 = clock();
 	float speed=0;
 	int t=0;
+	
 	//Game loop
 	do
 	{
@@ -246,7 +247,7 @@ int main()
 
 			}
 		}	
-		
+
 		Model = glm::rotate(Model, angleX, glm::vec3(0, 1, 0));
 		Model = glm::rotate(Model, angleY, glm::vec3(1, 0, 0));
 		Model = glm::rotate(Model, angleZ, glm::vec3(0, 0, 1));
@@ -254,16 +255,10 @@ int main()
 		glUniform3f(0, 0, 0, -3);		
 
 		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
-
-<<<<<<< HEAD
-		// Lighting of objects and world
-		glm::vec4 lightPositionSpaceship = Model * glm::vec4(.0, 3.0, -30.0, 1);
-		glUniform3f(glGetUniformLocation(programID, "LightPositionSpaceship"), lightPositionSpaceship.x, lightPositionSpaceship.y, lightPositionSpaceship.z);
-=======
-		// Lighting of world
-		glm::vec4 lightPositionWorld = Model * glm::vec4(.0, 3.0, -30.0, 1.0);
+		
+		// Lighting of world	
 		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
->>>>>>> tmp
+		lightPositionWorld.z += controls.moveSpaceshipOnZ(window, speed);;
 		
 		glFlush();
 		// Swap buffers

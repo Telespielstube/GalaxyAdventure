@@ -9,7 +9,6 @@
 #include "Gate.h"
 #include "ColBox.h"
 
-
 float scaleFactor = 1.0f;
 
 /** Constructor
@@ -35,7 +34,7 @@ void Gate::draw(glm::mat4 &Model, GLuint programID)
 	glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glUniform1i(textureID, 0);
-	glm::vec3 lightPositionGate = glm::vec3(5.0, 3.0, .0);
+	glm::vec3 lightPositionGate = glm::vec3(.0, 13.0, .0);
 	glUniform3f(glGetUniformLocation(programID, "LightPositionGate"), lightPositionGate.x, lightPositionGate.y, lightPositionGate.z);
 	
 	float angleY = 90.0f;
