@@ -5,6 +5,7 @@
 /** Constructor to read the data from the file and passing the data to the vertexshader and fragmentshader
 *
 *	@param	filename	path of the obj. file.
+*	@param	Renderer	Model, view, projection matrix.
 */
 RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_renderer(renderer)
 {
@@ -106,26 +107,21 @@ float RenderedObject::getZPosition()
 	return zPosition;
 }
 
+/** Set function for x angle of object.
+*
+*/
 void RenderedObject::setXAngle(float x)
 {
 	xAngle = x;
 }
 
+/** Set function for y angle of object.
+*
+*/
 void RenderedObject::setYAngle(float y)
 {
 	yAngle = y;
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /** Destructor
 *

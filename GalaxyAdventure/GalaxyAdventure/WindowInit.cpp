@@ -33,18 +33,20 @@ bool WindowInit::initializeGLFW()
 *	@param	xPosition	xPosition on screen.
 *	@param	yPosition	yPosition on screen.
 *
+*	@return	Main window 
+*
 */
 GLFWwindow* WindowInit::createMainWindow(int width, int height, const char *title, int xPosition, int yPosition)
 {
 	GLFWwindow *window;
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
+	
 	if (window == NULL) {
 		fprintf(stderr, "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version of the tutorials.\n");
 		glfwTerminate();
 		return NULL;
 	}
-
-	//Sets the postion for the window
+	
 	glfwSetWindowPos(window, xPosition, yPosition);
 	glfwMakeContextCurrent(window); //
 

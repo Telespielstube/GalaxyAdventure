@@ -11,6 +11,10 @@ Renderer::~Renderer()
 {
 }
 
+/** Holds the model view projection matrix.
+*
+*	@param &Model	Memory address of the model.
+*/
 void Renderer::sendMVP(glm::mat4 &Model)
 {
 	// Our ModelViewProjection : multiplication of our 3 matrices

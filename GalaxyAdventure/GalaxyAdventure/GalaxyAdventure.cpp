@@ -1,3 +1,4 @@
+#include <algorithm>  
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -16,7 +17,7 @@
 #include "cube.h"
 #include "WindowInit.h"
 #include "Windows.h"
-#include <time.h>
+#include "Star.h"
 
 GLuint programID;
 glm::mat4 Projection;
@@ -44,6 +45,16 @@ bool colDetection(ColBox box1, ColBox box2) {
 
 }
 
+bool compareStarPositions(Star *a, Star *b)
+{
+	if (!a)
+		return false;
+	if (!b)
+		return true;
+
+	return a->getZPosition() > b->getZPosition();
+}
+
 int main()
 {
 	WindowInit windowInit;
@@ -63,12 +74,14 @@ int main()
 	
 	// Loads shaders and textures.
 	programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-	GLuint shipTexture = loadBMP("shipTexture.bmp");
-	GLuint TextureID = glGetUniformLocation(programID, "objectTexture");
-	GLuint gateTexture = loadBMP("gateTexture.bmp");
-	GLuint gateTextureID = glGetUniformLocation(programID, "objectTexture");
-	
+	GLuint shipTexture = loadBMP("../Texture/shipTexture.bmp");
+	GLuint shipTextureID = glGetUniformLocation(programID, "shipObjTexture");
+	GLuint gateTexture = loadBMP("../Texture/gateTexture.bmp");
+	GLuint gateTextureID = glGetUniformLocation(programID, "gateObjTexture");
+	GLuint starTexture = loadBMP("../Texture/starTexture.bmp");
+	GLuint starTextureID = glGetUniformLocation(programID, "starObjTexture");
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
 	glDepthFunc(GL_LESS);
 	glDisable(GL_CULL_FACE);
@@ -82,12 +95,12 @@ int main()
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 3.0f, 0.0f);
 	View = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-	glm::vec4 lightPositionWorld = Model * glm::vec4(.0f, 30.0f, -100.0f, 1.0f);
-
-	//Create objects on stack   
+	glm::vec4 lightPositionWorld = Model * glm::vec4(.0f, 30.0f, 100.0f, 1.0f);
+ 
 	Renderer modelRenderer(programID, Projection, View);
-	Spaceship spaceShip("Ship.obj", modelRenderer, shipTexture, TextureID);
+	Spaceship spaceShip("../Object/Ship.obj", modelRenderer, shipTexture, shipTextureID);
 	Gate *gate;
+	Star *star;
 	RandomNumber randomNumber;
 	Controls controls;
 
@@ -101,9 +114,8 @@ int main()
 	{
 		max = 4.0f - ((float)rand()) / (float)RAND_MAX;
 		min = -4.0f + ((float)rand()) / (float)RAND_MAX;
-		gate = new Gate("Gate.obj", modelRenderer, gateTexture, gateTextureID);
+		gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
 		gateList.push_back(gate);
-		
 		/*
 		// Random Gate Position
 		gate->setPosition((randomNumber.generateRandomNumber(max, min)),
@@ -141,38 +153,66 @@ int main()
 		//std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
 		
 	}
+	
+	std::vector<Star*> starField;
+	int numberOfStars = 500;
+	for (int i = 0; i < numberOfStars; i++)
+	{
+		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+		star->setPosition(randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f);
+		starField.push_back(star);
+	}
+ 
+	std::stable_sort(starField.begin(), starField.end(), compareStarPositions);
 
 	spaceShip.setPosition(.0f, .0f, .0f);
-	t1 = clock();
-	float speed=0;
-	int t=0;
 	
+	float travelledDistance = .0f;
+
+	int t1 = clock();
+	float speed = .0f;
+	int t = 0;
 	//Game loop
 	do
-	{
-		
+	{	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		glClearColor(0.01f, 0.01f, 0.01f, 0.01f);
+		
+		for (int i = 0; i < numberOfStars; i++)
+			starField.at(i)->draw(Model, programID);
+		
 		// Geschwindigkeitsberechnung
 		if (t == 200) {
 			std::cout << (clock() - t1) << std::endl;
-			speed = ((clock() - t1) / 700.0f);		
-			std::cout << (speed)  << std::endl;
+			speed = ((clock() - t1) / 700.0f);
+			std::cout << (speed) << std::endl;
 			std::cout << (((speed) * 0.05f) - 0.05f) << std::endl;
-			speed = 0.05f + (((speed) * 0.05f)-0.05f);			
+			speed = 0.05f + (((speed) * 0.05f) - 0.05f);
 			t1 = clock();
 			std::cout << speed << std::endl;
 		}
-		if (t<201)
+		if (t < 201)
 			t++;
-
 
 		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
 		float angleX = controls.CamOnX(window, speed);
 		float angleY = controls.CamOnY(window, speed);
-		
+		int moveCount = 0;
+		travelledDistance += abs(spaceShipOnZ);
+		if (travelledDistance > 2.5f) {
+			for (Star *currentStar : starField) {
+				if (currentStar->getZPosition() > spaceShip.getZPosition()) {
+					moveCount++;
+					currentStar->setPosition(randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, currentStar->getZPosition() - travelledDistance);
+				}
+			}
+			std::cout << "Moved " << moveCount << "stars" << '\n';
+			std::stable_sort(starField.begin(), starField.end(), compareStarPositions);
+			travelledDistance = .0f;
+		}
+
 		glm::mat4 Save = Model;
 		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
 	
@@ -185,7 +225,7 @@ int main()
 		// TODO. vll auch eine Main Kollisionsbox erstellen über das ganze Schiff.
 		ColBox *colShip = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 0.7f, spaceShip.getYPosition() + spaceShipOnY + 0.2f, spaceShip.getZPosition() + spaceShipOnZ - 2,1.7f,0.6f,4 };
 		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 2.8f, spaceShip.getYPosition() + spaceShipOnY + 0.2f, spaceShip.getZPosition() + spaceShipOnZ + 0.5f,6.0f,0.6f,1 };
-	
+		
 		Model = Save;
 		// Geht die Gates durch
 		for (int i = 0; i < 5; i++)
@@ -206,6 +246,7 @@ int main()
 						
 			// Zeichnet Gate
 			g->draw(Model, programID);
+			
 			Model = Save;			
 			
 		}
@@ -243,8 +284,8 @@ int main()
 			}
 			else {
 				spaceShip.draw(Model, programID);
+			
 				Model = Save;
-
 			}
 		}	
 
@@ -252,13 +293,13 @@ int main()
 		Model = glm::rotate(Model, angleY, glm::vec3(1, 0, 0));
 		Model = glm::rotate(Model, angleZ, glm::vec3(0, 0, 1));
 		//glm::vec3 l = glm::vec3(spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition()+300);
-		glUniform3f(0, 0, 0, -3);		
+		//glUniform3f(0, 0, 0, -3);		
 
 		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
 		
-		// Lighting of world	
+		// Lighting scene
 		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
-		lightPositionWorld.z += controls.moveSpaceshipOnZ(window, speed);;
+		lightPositionWorld.z += controls.moveSpaceshipOnZ(window, speed);
 		
 		glFlush();
 		// Swap buffers

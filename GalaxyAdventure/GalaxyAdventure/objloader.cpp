@@ -8,7 +8,15 @@
 
 #include "objloader.h"
 
-
+/** Loads an .obj file
+*	@param	*path			pointer variable to the .obj file path.
+*	@param	out_vertices	vertices of the object.
+*	@param	out_uvs			uv values of the object.
+*	@param	out-mormals		normals of the object.
+*
+*	@return boolean if file is loaded or not.
+*
+*/
 bool loadObject(
 	const char *path,
 	std::vector<glm::vec3> & out_vertices, 

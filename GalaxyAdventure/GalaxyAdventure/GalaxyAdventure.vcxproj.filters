@@ -54,6 +54,9 @@
     <ClCompile Include="WindowInit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Star.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Spaceship.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowInit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Star.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
