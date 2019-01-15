@@ -112,26 +112,18 @@ int main()
 
 	for (int i = 0; i < 5; i++)
 	{
-		max = 4.0f - ((float)rand()) / (float)RAND_MAX;
-		min = -4.0f + ((float)rand()) / (float)RAND_MAX;
+		
 		gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
 		gateList.push_back(gate);
-		/*
-		// Random Gate Position
-		gate->setPosition((randomNumber.generateRandomNumber(max, min)),
-						(randomNumber.generateRandomNumber(max, min)),
-						newPosition);
-		*/
+		// Random Gate Position		
+		gate->setPosition(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40));
 
-		// Für Testzwecke Gates in einer reihe
-		gate->setPosition(0, 0 ,-10 - (i * 14));
-
-		gate->setXAngle(-5.0f); 
-		gate->setYAngle(90.0f); 
+		gate->setXAngle(-5.0f);
+		gate->setYAngle(90.0f);
 
 		// Erzeugt die KollisionsBox um das Gate
 		// Erste KollisionsBox ist über das Ganze Gate
-		float s = 1.08;
+		float s = 1.09;
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 5 * s, gate->getYPosition()*gate->getScaleF() - 5 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 10 * gate->getScaleF(), 10 * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 1.5* s, gate->getYPosition()*gate->getScaleF() - 4 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 3 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3 * s, gate->getYPosition()*gate->getScaleF() - 3.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
@@ -140,17 +132,18 @@ int main()
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 2.5* s, gate->getYPosition()*gate->getScaleF() - 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() - 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 0.5f* s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3 * s, gate->getYPosition()*gate->getScaleF() - 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 0.5f* s * gate->getScaleF(), 4 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() - 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 2 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() - 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 0.5 * s * gate->getScaleF(), 2 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3.5* s, gate->getYPosition()*gate->getScaleF() - 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 0.5* s * gate->getScaleF(), 2 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 4 * s, gate->getYPosition()*gate->getScaleF() + 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s *gate->getScaleF(), 0.5 * s* gate->getScaleF(), 4 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3 * s, gate->getYPosition()*gate->getScaleF() +1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s* gate->getScaleF(), 0.5* s * gate->getScaleF(), 4 * gate->getScaleF()));
-		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3.5* s, gate->getYPosition()*gate->getScaleF() +1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 3 * s, gate->getYPosition()*gate->getScaleF() + 1 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s* gate->getScaleF(), 0.5* s * gate->getScaleF(), 4 * gate->getScaleF()));
+		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3.5* s, gate->getYPosition()*gate->getScaleF() + 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 2.5* s, gate->getYPosition()*gate->getScaleF() + 1.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1 * s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 3 * s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s* gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() + 1.5* s, gate->getYPosition()*gate->getScaleF() + 2.5* s, gate->getZPosition()*gate->getScaleF() - 3.2, 1.5* s * gate->getScaleF(), 1 * s * gate->getScaleF(), 4 * gate->getScaleF()));
 		gate->addColBox(new ColBox(gate->getXPosition()*gate->getScaleF() - 1.5* s, gate->getYPosition()*gate->getScaleF() + 3 * s, gate->getZPosition()*gate->getScaleF() - 3.2, 3 * s * gate->getScaleF(), 1.0f* s * gate->getScaleF(), 4 * gate->getScaleF()));
-				
+
 		//std::cout << gate->getZPosition()*gate->getScaleF() << std::endl;
+
 		
 	}
 	
@@ -172,6 +165,7 @@ int main()
 	int t1 = clock();
 	float speed = .0f;
 	int t = 0;
+	int aGate = 0; // Akktuelle GateID die durchflogen werden muss
 	//Game loop
 	do
 	{	
@@ -182,14 +176,10 @@ int main()
 			starField.at(i)->draw(Model, programID);
 		
 		// Geschwindigkeitsberechnung
-		if (t == 200) {
-			std::cout << (clock() - t1) << std::endl;
-			speed = ((clock() - t1) / 700.0f);
-			std::cout << (speed) << std::endl;
-			std::cout << (((speed) * 0.05f) - 0.05f) << std::endl;
+		if (t == 200) {			
+			speed = ((clock() - t1) / 700.0f);			
 			speed = 0.05f + (((speed) * 0.05f) - 0.05f);
-			t1 = clock();
-			std::cout << speed << std::endl;
+			t1 = clock();			
 		}
 		if (t < 201)
 			t++;
@@ -208,7 +198,7 @@ int main()
 					currentStar->setPosition(randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, currentStar->getZPosition() - travelledDistance);
 				}
 			}
-			std::cout << "Moved " << moveCount << "stars" << '\n';
+			// std::cout << "Moved " << moveCount << "stars" << '\n';
 			std::stable_sort(starField.begin(), starField.end(), compareStarPositions);
 			travelledDistance = .0f;
 		}
@@ -227,6 +217,11 @@ int main()
 		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 2.8f, spaceShip.getYPosition() + spaceShipOnY + 0.2f, spaceShip.getZPosition() + spaceShipOnZ + 0.5f,6.0f,0.6f,1 };
 		
 		Model = Save;
+
+		// Ausgabe Position des schiffes
+		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
+
+
 		// Geht die Gates durch
 		for (int i = 0; i < 5; i++)
 		{
@@ -235,7 +230,7 @@ int main()
 			ColBox *b = l[0];
 			// Collisionsdetection 
 			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates
-			if (colDetection(*b, *colShip )) {
+			if (colDetection(*b, *colShip)) {
 				collision = true;
 				objID = i;
 			}
@@ -243,22 +238,32 @@ int main()
 				collision = true;
 				objID = i;
 			}
-						
+			if (aGate == i)
+				if (colDetection(*new ColBox{ g->getXPosition() - 1.5f,g->getYPosition() - 2.0f,g->getZPosition() - 0.1f,3,3,0.2 }, *new ColBox{ spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition() + 2.5f,0,0,0 })) {
+					std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
+					aGate++;
+				}
+
 			// Zeichnet Gate
 			g->draw(Model, programID);
-			
-			Model = Save;			
-			
+			Model = Save;
 		}
 		
 		
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
-			spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));	
-			// Zeichnet Schiff
-			spaceShip.draw(Model, programID);
-			Model = Save;
-			Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+			//Spielbegrenzung
+			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60 && spaceShip.getZPosition() + spaceShipOnZ <= 40) {
+				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+				// Zeichnet Schiff
+				spaceShip.draw(Model, programID);
+				Model = Save;
+				Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+			}
+			else {
+				spaceShip.draw(Model, programID);
+				Model = Save;
+			}
 		} else {
 			bool collision = false;
 			Gate *g(gateList.at(objID));
@@ -283,8 +288,7 @@ int main()
 				Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
 			}
 			else {
-				spaceShip.draw(Model, programID);
-			
+				spaceShip.draw(Model, programID);			
 				Model = Save;
 			}
 		}	
