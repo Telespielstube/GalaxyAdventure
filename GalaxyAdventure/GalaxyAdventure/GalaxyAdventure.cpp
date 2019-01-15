@@ -89,7 +89,7 @@ int main()
 	glMatrixMode(GL_MODELVIEW);
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	Projection = glm::perspective(80.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	Projection = glm::perspective(80.0f, 4.0f / 3.0f, 0.1f, 1500.0f);
 	// Camera position
 	glm::vec3 cameraPos = glm::vec3(0, 7, 12);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1);
@@ -147,6 +147,7 @@ int main()
 		
 	}
 	
+	/*  Testzwecke rausgenommen.
 	std::vector<Star*> starField;
 	int numberOfStars = 500;
 	for (int i = 0; i < numberOfStars; i++)
@@ -155,8 +156,40 @@ int main()
 		star->setPosition(randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f, randomNumber.generateRandomNumber(-20.0f, 10.0f) + 6.0f);
 		starField.push_back(star);
 	}
+	
  
 	std::stable_sort(starField.begin(), starField.end(), compareStarPositions);
+	*/
+
+	
+	std::vector<Star*> starField;
+	int numberOfStars = 500;
+	for (int i = 0; i < numberOfStars; i++)
+	{
+		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+		star->setPosition(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
+		starField.push_back(star);
+
+		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+		star->setPosition(randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
+		starField.push_back(star);
+
+		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+		star->setPosition(randomNumber.generateRandomNumber( -800.0f, 800.0f), randomNumber.generateRandomNumber( 400.0f, 1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
+		starField.push_back(star);
+
+		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+		star->setPosition(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
+		starField.push_back(star);
+		if (i % 4 == 0) {
+			star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+			star->setPosition(randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-1000.0f, -1500.0f));
+			starField.push_back(star);
+		}
+	}
+
+	
+	
 
 	spaceShip.setPosition(.0f, .0f, .0f);
 	
@@ -189,6 +222,8 @@ int main()
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
 		float angleX = controls.CamOnX(window, speed);
 		float angleY = controls.CamOnY(window, speed);
+
+		/* Testzwecke rausgenommen.
 		int moveCount = 0;
 		travelledDistance += abs(spaceShipOnZ);
 		if (travelledDistance > 2.5f) {
@@ -202,6 +237,8 @@ int main()
 			std::stable_sort(starField.begin(), starField.end(), compareStarPositions);
 			travelledDistance = .0f;
 		}
+
+		*/
 
 		glm::mat4 Save = Model;
 		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
@@ -253,7 +290,7 @@ int main()
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
 			//Spielbegrenzung
-			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60 && spaceShip.getZPosition() + spaceShipOnZ <= 40) {
+			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60 && spaceShip.getZPosition() + spaceShipOnZ <= 40 && spaceShip.getZPosition() + spaceShipOnZ >= -400) {
 				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
 				// Zeichnet Schiff
 				spaceShip.draw(Model, programID);
