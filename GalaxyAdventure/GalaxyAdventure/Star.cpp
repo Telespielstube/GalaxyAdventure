@@ -29,13 +29,11 @@ Star::Star(const char *filename, Renderer &renderer, GLuint starTexture, GLuint 
 *
 */
 void Star::draw(glm::mat4 &Model, GLuint programID) 
-{
-	
+{	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(textureID, 0);
-	glm::vec3 lightPositionStar = glm::vec3(.0f, 7.0f, .0f);
-	
+	glm::vec3 lightPositionStar = glm::vec3(.0f, 7.0f, .0f);	
 	glUniform3f(glGetUniformLocation(programID, "LightPositionStar"), lightPositionStar.x, lightPositionStar.y, lightPositionStar.z);
 	glm::mat4 Save = Model;
 	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));

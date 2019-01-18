@@ -4,5 +4,5 @@
 
 // Load a .BMP file using our custom loader
 GLuint loadBMP(const char * imagepath);
-
+GLuint loadDDS(const char * imagepath);
 #endif
