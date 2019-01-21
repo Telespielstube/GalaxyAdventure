@@ -7,7 +7,6 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <time.h>
-
 #include "Renderer.h"
 #include "Shader.h"
 #include "Spaceship.h"
@@ -20,7 +19,6 @@
 #include "Windows.h"
 #include "Star.h"
 
-
 GLuint programID;
 glm::mat4 Projection;
 glm::mat4 View;
@@ -29,7 +27,6 @@ float angleX;
 float angleY;
 float angleZ;
 clock_t t1;
-
 
 /** Kollisionsdetection
 *
@@ -47,9 +44,6 @@ bool colDetection(ColBox box1, ColBox box2) {
 	}
 
 }
-
-
-
 
 int main()
 {
@@ -96,21 +90,15 @@ int main()
  
 	Renderer modelRenderer(programID, Projection, View);
 	Spaceship spaceShip("../Object/Ship.obj", modelRenderer, shipTexture, shipTextureID);
-	
 	Gate *gate;
 	Star *star;
 	RandomNumber randomNumber;
-	Controls controls;
-
-	// Array of gates and random positions. 
 	randomNumber.initializeGenerator();
-	float max = .0f;
-	float min = .0f;
+	Controls controls;
 	std::vector<Gate*> gateList;
+	int gateListSize = 5;
 
-	
-
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < gateListSize; i++)
 	{
 		
 		gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);		
@@ -350,9 +338,8 @@ int main()
 		// Ausgabe Position des schiffes
 		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
 
-
 		// Geht die Gates durch
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < gateListSize; i++)
 		{
 			Gate *g(gateList.at(i));
 			std::vector <ColBox*> l = g->getColBox();
@@ -368,17 +355,25 @@ int main()
 					std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
 					aGate++;
 				}
-
+			if (spaceShip.getZPosition() < gateList.at(i)->getZPosition())
+			{				
+				std::cout << gateList.size() << std::endl;
+				gateList.push_back((gateList.at(i)));
+				gateListSize++;
+				g->setPosition(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200);
+			}
 			// Zeichnet Gate
 			g->draw(Model, programID);
 			Model = Save;
 		}
+
+		
 		
 		
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
 			//Spielbegrenzung
-			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60 && spaceShip.getZPosition() + spaceShipOnZ <= 40 && spaceShip.getZPosition() + spaceShipOnZ >= -400) {
+			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60) {
 				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
 				// Zeichnet Schiff
 				spaceShip.draw(Model, programID);
