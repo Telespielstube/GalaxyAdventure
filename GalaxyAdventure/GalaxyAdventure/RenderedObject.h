@@ -3,6 +3,7 @@
 #include <vector>
 #include <glm\gtc\matrix_transform.hpp>
 #include "Renderer.h"
+#include "Position.h"
 
 class RenderedObject
 {
@@ -10,11 +11,8 @@ public:
 	RenderedObject(const char *filename, Renderer &renderer);
 	virtual ~RenderedObject();
 	virtual void drawVertices(glm::mat4 &Model);
-
 	virtual void setPosition(float x, float y, float z);
-	float getXPosition();
-	float getYPosition();
-	float getZPosition();
+	Position getPosition();	
 	virtual void setXAngle(float x);
 	virtual void setYAngle(float y);
 	
@@ -36,9 +34,10 @@ protected:
 	GLuint texture;
 	GLuint textureID;
 
-	float xPosition;
-	float yPosition;
-	float zPosition;
 	float xAngle;
 	float yAngle;
+
+private:
+	Position position;	
+	
 };

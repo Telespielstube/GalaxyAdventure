@@ -36,7 +36,8 @@ void Star::draw(glm::mat4 &Model, GLuint programID)
 	glm::vec3 lightPositionStar = glm::vec3(.0f, 7.0f, .0f);	
 	glUniform3f(glGetUniformLocation(programID, "LightPositionStar"), lightPositionStar.x, lightPositionStar.y, lightPositionStar.z);
 	glm::mat4 Save = Model;
-	Model = glm::translate(Model, glm::vec3(xPosition, yPosition, zPosition));
+	Position p = getPosition();
+	Model = glm::translate(Model, glm::vec3(p.getX(), p.getY(), p.getZ()));
 	m_renderer.sendMVP(Model);
 	RenderedObject::drawVertices(Model);
 	Model = Save;

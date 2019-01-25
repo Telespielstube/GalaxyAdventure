@@ -138,6 +138,7 @@
     <ClCompile Include="GalaxyAdventure.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="objloader.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="RandomNumber.cpp" />
     <ClCompile Include="RenderedObject.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="cube.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="objloader.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="RandomNumber.h" />
     <ClInclude Include="RenderedObject.h" />
     <ClInclude Include="Renderer.h" />

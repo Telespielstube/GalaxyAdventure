@@ -9,9 +9,7 @@
 */
 RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_renderer(renderer)
 {
-    xPosition = 0.0f;
-	yPosition = 0.0f;
-	zPosition = 0.0f;
+	position.setPosition(0, 0, 0);    
 	xAngle = .0f;
 
 	bool object = loadObject(filename, vertices, uvs, normals);
@@ -70,6 +68,11 @@ void RenderedObject::drawVertices(glm::mat4 &Model)
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
 
+Position RenderedObject::getPosition()
+{
+	return position;
+}
+
 /** Sets a specific position of the object.
 *	
 *	@param	x	holds the x coordinate.
@@ -78,34 +81,9 @@ void RenderedObject::drawVertices(glm::mat4 &Model)
 */
 void RenderedObject::setPosition(float x, float y, float z)
 {
-	xPosition = x;
-	yPosition = y;
-	zPosition = z;
+	position.setPosition(x, y, z);	
 }
 
-/** Get function for x Position of object.
-*
-*/
-float RenderedObject::getXPosition()
-{
-	return xPosition;
-}
-
-/** Get function for y Position of object.
-*
-*/
-float RenderedObject::getYPosition()
-{
-	return yPosition;
-}
-
-/** Get function for z Position of object.
-*
-*/
-float RenderedObject::getZPosition()
-{
-	return zPosition;
-}
 
 /** Set function for x angle of object.
 *

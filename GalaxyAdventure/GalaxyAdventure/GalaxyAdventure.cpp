@@ -32,10 +32,11 @@ clock_t t1;
 *
 *	Prüft zwei übergebene Kollisionsboxen ob sie sich berühren wenn ja wird true zurückgegben.
 */
-bool colDetection(ColBox box1, ColBox box2) {
-	if (box1.getPosX() + box1.getColX() >= box2.getPosX() && box2.getPosX() + box2.getColX() >= box1.getPosX() &&
-		box1.getPosY() + box1.getColY() >= box2.getPosY() && box2.getPosY() + box2.getColY() >= box1.getPosY() &&
-		box1.getPosZ() + box1.getColZ() >= box2.getPosZ() && box2.getPosZ() + box2.getColZ() >= box1.getPosZ()) {
+bool colDetection(Position p, ColBox box1, ColBox box2) {
+	
+	if (p.getX() + box1.getPosX() + box1.getColX() >= box2.getPosX() && box2.getPosX() + box2.getColX() >= p.getX() + box1.getPosX() &&
+		p.getY() + box1.getPosY() + box1.getColY() >= box2.getPosY() && box2.getPosY() + box2.getColY() >= p.getY() + box1.getPosY() &&
+		p.getZ() + box1.getPosZ() + box1.getColZ() >= box2.getPosZ() && box2.getPosZ() + box2.getColZ() >= p.getZ() + box1.getPosZ()) {
 		//std::cout << box1.getPosX()<< ">=" << box2.getPosX() << std::endl;
 		return true;
 	}
@@ -95,189 +96,40 @@ int main()
 	RandomNumber randomNumber;
 	randomNumber.initializeGenerator();
 	Controls controls;
-	std::vector<Gate*> gateList;
+	//std::vector<Gate*> gateList;
+	std::vector<Position*> gateList;
 	int gateListSize = 5;
 
-	for (int i = 0; i < gateListSize; i++)
-	{
-		
-		gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);		
-		gateList.push_back(gate);
-		// Random Gate Position			
-		gate->setPosition(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40));
+	gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
+	gate->setPosition(0,0,0);
+	gate->setXAngle(-5.0f);
+	gate->setYAngle(90.0f);
 
-		gate->setXAngle(-5.0f);
-		gate->setYAngle(90.0f);
-
-		// Erzeugt die KollisionsBox um das Gate
-		// Erste KollisionsBox ist über das Ganze Gate
-		float s = 1.08;		
-		
-		float x = 4.22;
-		float y =  0.5;
-		float z =  0.68;
-
-		float xCol = 0.58;
-		float yCol = 1;
-		float zCol = 1.36;
-
-
-		//  ******************** Erstellung Kollisionsbox ums gate   *********************************
-
-			// Erste Kollisionsbox Main box dient zur erkennung das Schiff in der nähe ist zum Gate
-			gate->addColBox(new ColBox(gate->getXPosition() - 5, gate->getYPosition() - 5, gate->getZPosition() - 3.2, 10, 10, 4));
-
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 4.2; y = 0.5; xCol = 0.6; yCol = 0.5;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 4.1; y = 1;	xCol = 0.6;	yCol = 0.25;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-		
-			x = 4.0; y = 1.25;	xCol = 0.65;	yCol = 0.25;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.9; y = 1.5;	xCol = 0.65;	yCol = 0.25;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.8; y = 1.75;	xCol = 0.7;	yCol = 0.25;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.7; y = 2;	xCol = 0.7;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.65; y = 2.125; xCol = 0.75;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.55; y = 2.25; xCol = 0.75;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.5; y = 2.375; xCol = 0.75;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.4; y = 2.5; xCol = 0.8;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.3; y = 2.625; xCol = 0.8;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.2; y = 2.75; xCol = 0.8;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.1; y = 2.875; xCol = 0.85;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 3.0; y = 3.0; xCol = 0.9;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 2.8; y = 3.125; xCol = 1.0;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 2.65; y = 3.25; xCol = 1.1;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 2.5; y = 3.375; xCol = 1.1;	yCol = 0.125;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 0.5; y = 3.6; xCol = 1;	yCol = 0.58;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 1; y = 3.5; xCol = 0.5;	yCol = 0.58;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-
-			x = 1.5; y = 3.4; xCol = 0.5;	yCol = 0.58;
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() - x, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() + y, gate->getZPosition() - z, xCol, yCol, zCol));
-			gate->addColBox(new ColBox(gate->getXPosition() + x - xCol, gate->getYPosition() - y - yCol, gate->getZPosition() - z, xCol, yCol, zCol));		
-
-		//////////////////////////////////////////////
-		
-	}
+	// Erstellt die Liste mit den Gates
+	for (int i = 0; i < gateListSize; i++) {
+		gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40)));
+	}	
 		
 
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
-	std::vector<Star*> starField;
-	int numberOfStars = 500;
+	std::vector<Position*> starField;
+	std::vector<Position*> starField2;
+	int numberOfStars = 250;
+	star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
+	star->setPosition(0,0,0);
 	for (int i = 0; i < numberOfStars; i++)
 	{
-		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-		star->setPosition(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
-		starField.push_back(star);
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 
-		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-		star->setPosition(randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
-		starField.push_back(star);
+		starField.push_back(new Position(randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 
-		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-		star->setPosition(randomNumber.generateRandomNumber( -800.0f, 800.0f), randomNumber.generateRandomNumber( 400.0f, 1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
-		starField.push_back(star);
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 
-		star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-		star->setPosition(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f));
-		starField.push_back(star);
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 		if (i % 4 == 0) {
-			star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-			star->setPosition(randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-1000.0f, -1500.0f));
-			starField.push_back(star);
-		}
+			starField2.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-1000.0f, -1500.0f)));
+		}	
+		
 	}
 
 	//////////////////////////////
@@ -289,8 +141,11 @@ int main()
 	
 	int t1 = clock(); 
 	float speed = .0f;
+	float speedx = .0f;
 	int t = 0;
+	int z = 0;
 	int aGate = 0; // Akktuelle GateID die durchflogen werden muss
+	float grenzeZ = 40; // Spielfeldgrenze nach hinten
 	
 	
 	//Game loop
@@ -299,17 +154,31 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.01f, 0.01f, 0.01f, 0.01f);
 		
-		for (int i = 0; i < numberOfStars; i++)
-			starField.at(i)->draw(Model, programID);
+		for (int i = 0; i < starField.size(); i++) {
+			if (starField.at(i)->getZ() >= spaceShip.getPosition().getZ()-300) 
+				starField.at(i)->setPosition(starField.at(i)->getX(), starField.at(i)->getY(), spaceShip.getPosition().getZ() - 1500);			
+			star->setPosition(starField.at(i)->getX(), starField.at(i)->getY(), starField.at(i)->getZ());
+			star->draw(Model, programID);
+		}
+		for (int i = 0; i < starField2.size(); i++) {
+			star->setPosition(starField2.at(i)->getX(), starField2.at(i)->getY(), starField2.at(i)->getZ()+spaceShip.getPosition().getZ());
+			star->draw(Model, programID);
+		}	
 		
 		// Geschwindigkeitsberechnung
-		if (t == 200) {			
-			speed = ((clock() - t1) / 700.0f);			
+		if (t == 50) {			
+			speed = ((clock() - t1) / 175.0f);
 			speed = 0.05f + (((speed) * 0.05f) - 0.05f);
-			t1 = clock();			
+			t1 = clock();
+			if (z < 5) {
+				t = 0;
+				z++;
+			}
 		}
-		if (t < 201)
+		if (t < 51)
 			t++;
+			
+		
 
 		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
@@ -328,42 +197,40 @@ int main()
 
 		// Kollisionsboxen für das Schiff. 
 		// TODO. vll auch eine Main Kollisionsbox erstellen über das ganze Schiff.
-		ColBox *colShip = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 3.1f, spaceShip.getYPosition() + spaceShipOnY - 0.45f, spaceShip.getZPosition() + spaceShipOnZ - 2.3f, 6.2f, 1.4f, 6.2f };
-		ColBox *colShip2 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 1.15f, spaceShip.getYPosition() + spaceShipOnY - 0.45f, spaceShip.getZPosition() + spaceShipOnZ - 2.3f, 2.3f, 1.4f, 6.2f };
-		ColBox *colShip3 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX -2.3f, spaceShip.getYPosition() + spaceShipOnY + 0.01f, spaceShip.getZPosition() + spaceShipOnZ + 1, 4.6f, 0.9f, 1.49f };
-		ColBox *colShip4 = new ColBox{ spaceShip.getXPosition() + spaceShipOnX - 3.1f, spaceShip.getYPosition() + spaceShipOnY + 0.01f, spaceShip.getZPosition() + spaceShipOnZ + 1, 6.2, 0.4f, 1.49f };
+		ColBox *colShip = new ColBox{ spaceShip.getPosition().getX() + spaceShipOnX - 3.1f, spaceShip.getPosition().getY() + spaceShipOnY - 0.45f, spaceShip.getPosition().getZ() + spaceShipOnZ - 2.3f, 6.2f, 1.4f, 6.2f };
+		ColBox *colShip2 = new ColBox{ spaceShip.getPosition().getX() + spaceShipOnX - 1.15f, spaceShip.getPosition().getY() + spaceShipOnY - 0.45f, spaceShip.getPosition().getZ() + spaceShipOnZ - 2.3f, 2.3f, 1.4f, 6.2f };
+		ColBox *colShip3 = new ColBox{ spaceShip.getPosition().getX() + spaceShipOnX -2.3f, spaceShip.getPosition().getY() + spaceShipOnY + 0.01f, spaceShip.getPosition().getZ() + spaceShipOnZ + 1, 4.6f, 0.9f, 1.49f };
+		ColBox *colShip4 = new ColBox{ spaceShip.getPosition().getX() + spaceShipOnX - 3.1f, spaceShip.getPosition().getY() + spaceShipOnY + 0.01f, spaceShip.getPosition().getZ() + spaceShipOnZ + 1, 6.2, 0.4f, 1.49f };
 
 		Model = Save;
 
 		// Ausgabe Position des schiffes
-		//std::cout << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
+		//std::cout << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 
 		// Geht die Gates durch
-		for (int i = 0; i < gateListSize; i++)
+		for (int i = aGate; i < gateList.size(); i++)
 		{
-			Gate *g(gateList.at(i));
-			std::vector <ColBox*> l = g->getColBox();
+			gate->setPosition(gateList[i]->getX(), gateList[i]->getY(), gateList[i]->getZ());
+			std::vector <ColBox*> l = gate->getColBox();
 			ColBox *b = l[0];
 			// Collisionsdetection 
 			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates
-			if (colDetection(*b, *colShip)) {
+			
+			if (colDetection(gate->getPosition(),*b, *colShip)) {
+				
 				collision = true;
 				objID = i;
 			}			
 			if (aGate == i)
-				if (colDetection(*new ColBox{ g->getXPosition() - 1.5f,g->getYPosition() - 2.0f,g->getZPosition() - 0.1f,3,3,0.2 }, *new ColBox{ spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition() + 2.5f,0,0,0 })) {
-					std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getXPosition() << " " << spaceShip.getYPosition() << " " << spaceShip.getZPosition() << std::endl;
-					aGate++;
+				if (colDetection(*new Position(gate->getPosition().getX(), gate->getPosition().getY(), gate->getPosition().getZ()),*new ColBox{ - 1.5f, - 2.0f, - 0.1f,3,4,0.2 }, *new ColBox{ spaceShip.getPosition().getX(), spaceShip.getPosition().getY(), spaceShip.getPosition().getZ() + 2.5f,0,0,0.5 })) {
+					std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
+					aGate++;					
+					gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200));
+					grenzeZ = spaceShip.getPosition().getZ() + 40;
 				}
-			if (spaceShip.getZPosition() < gateList.at(i)->getZPosition())
-			{				
-				std::cout << gateList.size() << std::endl;
-				gateList.push_back((gateList.at(i)));
-				gateListSize++;
-				g->setPosition(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200);
-			}
+			
 			// Zeichnet Gate
-			g->draw(Model, programID);
+			gate->draw(Model, programID);
 			Model = Save;
 		}
 
@@ -373,8 +240,8 @@ int main()
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
 			//Spielbegrenzung
-			if (spaceShip.getXPosition() + spaceShipOnX >= -60 && spaceShip.getXPosition() + spaceShipOnX <= 60 && spaceShip.getYPosition() + spaceShipOnY >= -60 && spaceShip.getYPosition() + spaceShipOnY <= 60) {
-				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));
+			if (spaceShip.getPosition().getX() + spaceShipOnX >= -60 && spaceShip.getPosition().getX() + spaceShipOnX <= 60 && spaceShip.getPosition().getY() + spaceShipOnY >= -60 && spaceShip.getPosition().getY() + spaceShipOnY <= 60 && spaceShip.getPosition().getZ() + spaceShipOnZ < grenzeZ) {
+				spaceShip.setPosition((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ));
 				// Zeichnet Schiff
 				spaceShip.draw(Model, programID);
 				Model = Save;
@@ -386,24 +253,25 @@ int main()
 			}
 		} else {
 			bool collision = false;
-			Gate *g(gateList.at(objID));
-			std::vector <ColBox*> colBoxList = g->getColBox();	
+			gate->setPosition(gateList.at(objID)->getX(), gateList.at(objID)->getY(), gateList.at(objID)->getZ());			
+			std::vector <ColBox*> colBoxList = gate->getColBox();
 			// Prüft die Kleineren Kollisionsboxen um das Gate.			
-			for (int i = 1; i < colBoxList.size(); i++) {								
-				if (colDetection(*colBoxList[i], *colShip2)) {
+			for (int i = 1; i < colBoxList.size(); i++) {	
+				
+				if (colDetection(gate->getPosition(),*colBoxList[i], *colShip2)) {
 					collision = true;					
 				}
-				if (colDetection(*colBoxList[i], *colShip3)) {
+				if (colDetection(gate->getPosition(), *colBoxList[i], *colShip3)) {
 					collision = true;
 				}	
-				if (colDetection(*colBoxList[i], *colShip4)) {
+				if (colDetection(gate->getPosition(), *colBoxList[i], *colShip4)) {
 					collision = true;
 				}
 			}
 
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
-				spaceShip.setPosition((spaceShip.getXPosition() + spaceShipOnX), (spaceShip.getYPosition() + spaceShipOnY), (spaceShip.getZPosition() + spaceShipOnZ));		
+				spaceShip.setPosition((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ));		
 				// Zeichnet Schiff
 				spaceShip.draw(Model,programID);
 				Model = Save;
@@ -418,7 +286,7 @@ int main()
 		Model = glm::rotate(Model, angleX, glm::vec3(0, 1, 0));
 		Model = glm::rotate(Model, angleY, glm::vec3(1, 0, 0));
 		Model = glm::rotate(Model, angleZ, glm::vec3(0, 0, 1));
-		//glm::vec3 l = glm::vec3(spaceShip.getXPosition(), spaceShip.getYPosition(), spaceShip.getZPosition()+300);
+		//glm::vec3 l = glm::vec3(spaceShip.getPosition().getX(), spaceShip.getPosition().getY(), spaceShip.getPosition().getZ()+300);
 		//glUniform3f(0, 0, 0, -3);		
 
 		//glm::vec4 lpw = Model * glm::vec4(0, 0, 0.4, 1);
