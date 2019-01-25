@@ -17,6 +17,5 @@ public:
 
 	virtual void draw(glm::mat4 &Model, GLuint programID);
 	
-	ColBox box1;
 };
 

@@ -4,6 +4,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include "Renderer.h"
 #include "Position.h"
+#include "ColBox.h"
 
 class RenderedObject
 {
@@ -11,14 +12,14 @@ public:
 	RenderedObject(const char *filename, Renderer &renderer);
 	virtual ~RenderedObject();
 	virtual void drawVertices(glm::mat4 &Model);
-	virtual void setPosition(float x, float y, float z);
-	Position getPosition();	
-	virtual void setXAngle(float x);
-	virtual void setYAngle(float y);
+	virtual void setPosition(Position p);
+	void addColBox(ColBox *b);  // Zum hinzufügen von Kollisionsboxen.
+	std::vector <ColBox*> getColBox();	// Speichert die Kolisionsboxen in einem Array, Index 0 = Main Kollisonsbox um das Gate
+	Position getPosition();		
+	
 	
 
-protected:
-	void sendMVP(glm::mat4 &Model);
+protected:	
 	Renderer &m_renderer;
 
 	GLuint VertexArrayID;
@@ -32,12 +33,11 @@ protected:
 	GLuint uvbuffer;
 
 	GLuint texture;
-	GLuint textureID;
-
-	float xAngle;
-	float yAngle;
+	GLuint textureID;	
+	std::vector<ColBox*> colBoxList;
 
 private:
 	Position position;	
+	
 	
 };

@@ -63,45 +63,6 @@ float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 	return positionZ;
 }
 
-float Controls::CamOnX(GLFWwindow * window, float speed)
-{
-	
-	float position = .0f;
-
-	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-	{
-		position -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS)
-	{
-		position += speed;
-	}
-	
-
-	return position;
-}
-
-float Controls::CamOnY(GLFWwindow * window, float speed)
-{
-	float position = .0f;
-	
-	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
-	{
-		position -= speed;
-	}
-	if (glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
-	{
-		position += speed;
-	}
-	
-
-	return position;
-}
-
-float Controls::CamOnZ(GLFWwindow * window, float speed)
-{
-	return 0.0f;
-}
 
 
 Controls::~Controls()

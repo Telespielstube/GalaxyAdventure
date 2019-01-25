@@ -58,3 +58,17 @@ float ColBox::getPosZ()
 {
 	return posZ;
 }
+
+bool ColBox::checkCollision(Position p, Position p1, ColBox b)
+{
+	
+	if (p.getX() + posX + colX >= p1.getX() + b.getPosX() && p1.getX() + b.getPosX() + b.getColX() >= p.getX() + posX &&
+		p.getY() + posY + colY >= p1.getY() + b.getPosY() && p1.getY() + b.getPosY() + b.getColY() >= p.getY() + posY &&
+		p.getZ() + posZ + colZ >= p1.getZ() + b.getPosZ() && p1.getZ() + b.getPosZ() + b.getColZ() >= p.getZ() +posZ) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+}

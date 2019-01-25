@@ -179,25 +179,17 @@ void Gate::draw(glm::mat4 &Model, GLuint programID)
 	
 	float angleY = 90.0f;
 	glm::mat4 Save = Model;
-	Model = glm::scale(Model, glm::vec3(1.0f * scaleFactor, 1.0f * scaleFactor, 1.0f * scaleFactor));
 	Position p = getPosition();
 	Model = glm::translate(Model, glm::vec3(p.getX(), p.getY(), p.getZ()));
-	Model = glm::rotate(Model, xAngle, glm::vec3(1.0f, .0f, .0f));
-	Model = glm::rotate(Model, yAngle, glm::vec3(.0f, 1.0f, .0f));
+	Model = glm::rotate(Model, p.getAngleX(), glm::vec3(1.0f, .0f, .0f));
+	Model = glm::rotate(Model, p.getAngleY(), glm::vec3(.0f, 1.0f, .0f));
+	//std::cout << p.getAngleX() << " " << p.getAngleY() << " " <<  std::endl;
 	m_renderer.sendMVP(Model);
 	RenderedObject::drawVertices(Model);
 	Model = Save;
 }
 
-std::vector <ColBox*> Gate::getColBox()
-{
-	return colBoxList;
-}
 
-void Gate::addColBox(ColBox *b)
-{
-	colBoxList.push_back(b);
-}
 
 float Gate::getScaleF()
 {

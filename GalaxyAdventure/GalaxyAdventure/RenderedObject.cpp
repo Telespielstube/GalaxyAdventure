@@ -9,8 +9,8 @@
 */
 RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_renderer(renderer)
 {
-	position.setPosition(0, 0, 0);    
-	xAngle = .0f;
+	position.setPosition(0, 0, 0,0,0);    
+	
 
 	bool object = loadObject(filename, vertices, uvs, normals);
 
@@ -73,33 +73,27 @@ Position RenderedObject::getPosition()
 	return position;
 }
 
+std::vector <ColBox*> RenderedObject::getColBox()
+{
+	return colBoxList;
+}
+
+void RenderedObject::addColBox(ColBox *b)
+{
+	colBoxList.push_back(b);
+}
+
 /** Sets a specific position of the object.
 *	
 *	@param	x	holds the x coordinate.
 *	@param	y	holds the y coordinate.
 *	@param	z	holds the z coordinate.
 */
-void RenderedObject::setPosition(float x, float y, float z)
+void RenderedObject::setPosition(Position p)
 {
-	position.setPosition(x, y, z);	
+	position.setPosition(p.getX(), p.getY(), p.getZ(), p.getAngleX(), p.getAngleY());	
 }
 
-
-/** Set function for x angle of object.
-*
-*/
-void RenderedObject::setXAngle(float x)
-{
-	xAngle = x;
-}
-
-/** Set function for y angle of object.
-*
-*/
-void RenderedObject::setYAngle(float y)
-{
-	yAngle = y;
-}
 
 /** Destructor
 *

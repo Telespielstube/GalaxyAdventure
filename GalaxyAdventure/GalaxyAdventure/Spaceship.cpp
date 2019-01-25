@@ -20,10 +20,17 @@
 *	@param	TextureID		id for the texture of the ship..
 *
 */
-Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID) : RenderedObject(filename, renderer), box1(-1,0,-2, 2, 2, 5)
+Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID) : RenderedObject(filename, renderer)
 {
 	texture = shipTexture;
 	textureID = TextureID;
+
+
+	
+	addColBox(new ColBox( - 3.1f,  - 0.45f, - 2.3f, 6.2f, 1.4f, 6.2f));
+	addColBox(new ColBox( - 1.15f, - 0.45f, - 2.3f, 2.3f, 1.4f, 6.2f ));
+	addColBox(new ColBox( - 2.3f,  + 0.01f, + 1, 4.6f, 0.9f, 1.49f ));
+	addColBox(new ColBox{ - 3.1f,  + 0.01f, + 1, 6.2, 0.4f, 1.49f });
 }
 
 /** Draws the starship on screen.
