@@ -87,7 +87,7 @@ int main() {
 
 	// Erstellt die Liste mit den Gates
 	for (int i = 0; i < gateListSize; i++) {		
-			gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40), 5, 90));			
+			gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40), 5, 90));			
 	}	
 		
 
@@ -216,7 +216,8 @@ int main() {
 			if (col.checkCollision(gt.addPosition(gate->getPosition()), st.addPosition(spaceShip.getPosition()))) {
 				std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 				aGate++;					
-				gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200,5,90));
+				
+				gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) - 200, 5, 90));
 				grenzeZ = spaceShip.getPosition().getZ() + 40;
 				
 			}			
@@ -265,6 +266,9 @@ int main() {
 		if (moveShip) {
 			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ)));
 			Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+		} else {
+			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() - spaceShipOnX*2), (spaceShip.getPosition().getY() - spaceShipOnY*2), (spaceShip.getPosition().getZ() - spaceShipOnZ*2)));
+			Model = glm::translate(Model, glm::vec3(+spaceShipOnX*2, +spaceShipOnY*2, +spaceShipOnZ*2));
 		}
 		
 		// Lighting scene

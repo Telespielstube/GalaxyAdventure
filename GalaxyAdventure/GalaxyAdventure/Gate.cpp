@@ -22,8 +22,8 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 	texture = gateTexture;
 	textureID = TextureID;
 
-	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.0f), 4.25f, 4.68f));
-	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.1f), 4.25f, 0.68f));	
+	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.3f), 4.25f, 4.68f));
+	addColCicle(new ColCicle(Position(0.0f, 0.0f, -0.2f), 4.25f, 0.8f));	
 
 	//  ******************** Erstellung Kollisionsbox ums gate   *********************************
 
