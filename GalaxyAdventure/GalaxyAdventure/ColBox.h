@@ -10,7 +10,8 @@ public:
 	float getColX();
 	float getColY();
 	float getColZ();	
-	bool checkCollision(Position p, Position p1, ColBox b);
+	
+	ColBox addPosition(Position p);
 private:
 	float colX, colY, colZ;
 };

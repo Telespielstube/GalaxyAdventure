@@ -11,6 +11,8 @@ public:
 	bool checkColision(Position p, Position p1, ColCicle c);
 	bool checkColision(Position p, Position p1, ColBox b);
 	float getRadius();
+	float getColZ();
+	ColCicle addPosition(Position p);
 
 protected:
 	float r, colZ;

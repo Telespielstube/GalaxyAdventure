@@ -19,6 +19,8 @@
 #include "Star.h"
 #include "Col.h"
 #include "ColCicle.h"
+#include "Collision.h"
+
 
 GLuint programID;
 glm::mat4 Projection;
@@ -30,6 +32,7 @@ clock_t t1;
 int main() {
 	WindowInit windowInit;
 	glewExperimental = true;
+	Collision col;
 	if (!windowInit.initializeGLFW()) {
 		fprintf(stderr, "Failed to initialize GLFW\n");
 		return -1;
@@ -127,16 +130,18 @@ int main() {
 
 	////////////// TEST ////////////////////
 
-	ColCicle c1 = *new ColCicle(Position(0, 0, 1.9), 1, 2);
-	ColCicle c2 = *new ColCicle(Position(0, 0, 0), 1, 2);
+	ColCicle c1 = *new ColCicle(Position(6, 0, 5.1), 1, 2);
+	ColBox c2 = *new ColBox(Position(0, 0, 0), 5, 5,5);
 
-	if (c1.checkColision(c1.getPosition(), c2.getPosition(), c2))
+	//if (c1.checkColision(c1.getPosition(), c2.getPosition(), c2))
+	if (col.checkCollision(c2,c1))
 		printf("jo");
 
 	/////////////////////////////////////
 
 	//Game loop
 	do {	
+		Sleep(1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.01f, 0.01f, 0.01f, 0.01f);
 		
@@ -196,18 +201,16 @@ int main() {
 			// Collisionsdetection 
 			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates			
 			
-			if (spaceShip.getColBox()[0]->checkCollision(spaceShip.getPosition(), gate->getPosition(),*b)) {							
+			if (col.checkCollision(spaceShip.getColBox()[0]->addPosition(spaceShip.getPosition()),gate->getColBox()[0]->addPosition(gate->getPosition()))) {
 				collision = true;
-				objID = i;
-				
-			}		
-
-			
+				objID = i;				
+			}					
 
 			// Collisions Box zum prüfen ob durchs Gate geflogen wurde.
 			ColBox gt = *new ColBox(Position(-1.5f, -2.0f, -0.1f), 3, 4, 0.2f);
+			ColBox st = *new ColBox(Position(0.0f, 0.0f, 2.5f, 0, 0), 0.0f, 0.0f, 0.5f);
 			if (aGate == i)	
-			if ( gt.checkCollision(gate->getPosition(), spaceShip.getPosition(), *new ColBox(Position(0.0f, 0.0f, 2.5f,0,0),0.0f,0.0f,0.5f) ) ) {
+			if (col.checkCollision(gt.addPosition(gate->getPosition()), st.addPosition(spaceShip.getPosition()))) {
 				std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 				aGate++;					
 				gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200,5,90));
@@ -239,9 +242,12 @@ int main() {
 			gate->setPosition(*gateList.at(objID));			
 			std::vector <ColBox*> colBoxList = gate->getColBox();
 			// Prüft die Kleineren Kollisionsboxen um das Gate.			
-			for (int i = 1; i < colBoxList.size(); i++) {					
-				for (int j = 1; j < spaceShip.getColBox().size(); j++)				{					
-					if (spaceShip.getColBox()[j]->checkCollision(Position(spaceShip.getPosition().getX() + spaceShipOnX, spaceShip.getPosition().getY() + spaceShipOnY, spaceShip.getPosition().getZ() + spaceShipOnZ,0,0) ,gate->getPosition(),*colBoxList[i])) {
+			//for (int i = 1; i < colBoxList.size(); i++) {					
+			//	for (int j = 1; j < spaceShip.getColBox().size(); j++)				{	
+			for (int i = 1; i < gate->getColCicle().size(); i++) {
+				for (int j = 1; j < spaceShip.getColBox().size(); j++) {
+					//if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))), gate->getColBox()[i]->addPosition(gate->getPosition()))) {
+					if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))),gate->getColCicle()[i]->addPosition(gate->getPosition()),*new ColCicle(gate->getPosition().adPosition(Position(-4,+2,0)),2,0.68))) {
 						collision = true;
 					}
 				}

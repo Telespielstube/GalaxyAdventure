@@ -42,7 +42,7 @@ float ColBox::getColZ()
 	return colZ;
 }
 
-
+/*
 bool ColBox::checkCollision(Position p, Position p1, ColBox b)
 {
 
@@ -54,6 +54,11 @@ bool ColBox::checkCollision(Position p, Position p1, ColBox b)
 	else {
 		return false;
 	}
+}*/
+
+ColBox ColBox::addPosition(Position p)
+{
+	return *new ColBox(p.adPosition(position),colX,colY,colZ);
 }
 
 

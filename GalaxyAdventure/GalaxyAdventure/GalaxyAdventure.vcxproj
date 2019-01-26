@@ -135,6 +135,7 @@
     <ClCompile Include="Col.cpp" />
     <ClCompile Include="ColBox.cpp" />
     <ClCompile Include="ColCicle.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Controls.cpp" />
     <ClCompile Include="cube.cpp" />
     <ClCompile Include="GalaxyAdventure.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Col.h" />
     <ClInclude Include="ColBox.h" />
     <ClInclude Include="ColCicle.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="cube.h" />
     <ClInclude Include="Gate.h" />

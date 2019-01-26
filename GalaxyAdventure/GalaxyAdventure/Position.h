@@ -14,6 +14,7 @@ public:
 	void setAngleX(float angleX);
 	void setAngleY(float angleY);
 	void setPosition(float posX, float posY, float posZ, float angleX, float angleY);
+	Position adPosition(Position p1);
 	void setPosition(Position p);
 	
 
