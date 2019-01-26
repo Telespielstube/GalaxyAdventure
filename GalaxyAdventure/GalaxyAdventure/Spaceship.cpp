@@ -25,12 +25,12 @@ Spaceship::Spaceship(const char *filename, Renderer &renderer, GLuint shipTextur
 	texture = shipTexture;
 	textureID = TextureID;
 
-	addColCicle(new ColCicle(Position(0, 0, 0), 4, 1));
+	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.0f), 4.0f, 1.0f));
 	
 	addColBox(new ColBox(Position(- 3.1f,  - 0.45f, - 2.3f), 6.2f, 1.4f, 6.2f));
-	addColBox(new ColBox(Position(- 1.15f, - 0.45f, - 2.3f), 2.3f, 1.4f, 6.2f ));
-	addColBox(new ColBox(Position(- 2.3f,  + 0.01f, + 1), 4.6f, 0.9f, 1.49f ));
-	addColBox(new ColBox( Position(- 3.1f,  + 0.01f, + 1), 6.2, 0.4f, 1.49f ));
+	addColBox(new ColBox(Position(- 1.15f, - 0.45f, - 2.3f), 2.3f, 1.4f, 6.2f));
+	addColBox(new ColBox(Position(- 2.3f,  + 0.01f, + 1.0f), 4.6f, 0.9f, 1.49f));
+	addColBox(new ColBox(Position(- 3.1f,  + 0.01f, + 1.0f), 6.2f, 0.4f, 1.49f));
 }
 
 /** Draws the starship on screen.

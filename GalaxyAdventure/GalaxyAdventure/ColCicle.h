@@ -7,9 +7,7 @@ class ColCicle : public Col
 public:
 	ColCicle();
 	ColCicle(Position p, float radius, float cZ);
-	~ColCicle();
-	bool checkColision(Position p, Position p1, ColCicle c);
-	bool checkColision(Position p, Position p1, ColBox b);
+	~ColCicle();	
 	float getRadius();
 	float getColZ();
 	ColCicle addPosition(Position p);

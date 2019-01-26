@@ -44,6 +44,7 @@ int main() {
 		return -1;
 	}	
 	
+	
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	
 	// Loads shaders and textures.
@@ -85,15 +86,15 @@ int main() {
 	gate->setPosition(Position(0,0,0,0,0));	
 
 	// Erstellt die Liste mit den Gates
-	for (int i = 0; i < gateListSize; i++) {
-		gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40), 5, 90));			
+	for (int i = 0; i < gateListSize; i++) {		
+			gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40), 5, 90));			
 	}	
 		
 
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
 	std::vector<Position*> starField;
 	std::vector<Position*> starField2;
-	int numberOfStars = 250;
+	int numberOfStars = 80;
 	star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
 	star->setPosition(Position(0,0,0,0,0));
 	for (int i = 0; i < numberOfStars; i++) {
@@ -115,52 +116,57 @@ int main() {
 	
 
 	// Setzt die Position des Schiffes
-	spaceShip.setPosition(Position(0, 0, 0, 0, 0));
+	spaceShip.setPosition(Position(0, 0, 0));
 	
 	
 	int t1 = clock(); 
-	float speed = .0f;
-	float speedx = .0f;
+	float speed = .0f;	
 	int t = 0;
 	int z = 0;
 	int aGate = 0; // Akktuelle GateID die durchflogen werden muss
 	float grenzeZ = 40; // Spielfeldgrenze nach hinten
+	bool moveShip = false;
 	
 	printf("Steuerung: W Hoch , S Runter, Pfeiltasten Richtung \n");
-
-	////////////// TEST ////////////////////
-
-	ColCicle c1 = *new ColCicle(Position(6, 0, 5.1), 1, 2);
-	ColBox c2 = *new ColBox(Position(0, 0, 0), 5, 5,5);
-
-	//if (c1.checkColision(c1.getPosition(), c2.getPosition(), c2))
-	if (col.checkCollision(c2,c1))
-		printf("jo");
-
-	/////////////////////////////////////
-
+		
+	
 	//Game loop
 	do {	
-		Sleep(1);
+		moveShip = false;
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.01f, 0.01f, 0.01f, 0.01f);
 		
-
-		
-		
-		// Geschwindigkeitsberechnung
-		if (t == 50) {			
-			speed = ((clock() - t1) / 175.0f);
-			speed = 0.05f + (((speed) * 0.05f) - 0.05f);
-			t1 = clock();
-			if (z < 5) {
-				t = 0;
-				z++;
-			}
+		//////// anpassung der Fenstergröße wenn es verändert wird //////////
+		int width, height;
+		int bottom = 0;
+		int left = 0;
+		glfwGetWindowSize(window, &width, &height);		
+		// gleicht die Verzerrung aus.
+		if ((width + 0.0) / (height + 0.0) > 2) {
+			int owidth = width;
+			width = (width / ((width + 0.0) / (height + 0.0))) * 2;
+			left = (owidth - width) / 2;
+		} else {
+			int oheight = height;
+			height = (height * ((width + 0.0) / (height + 0.0))) /2;
+			bottom = (oheight - height) / 2;
 		}
-		if (t < 51)
-			t++;		
+		glViewport(left,bottom, width, height);
+		////////////////////////////////////////////////////////////////////
 
+
+		// Geschwindigkeitsberechnung
+		if (t == 100) {			
+			speed = ((clock() - t1) / 350.0f);
+			speed = 0.05f + (((speed) * 0.05f) - 0.05f);
+			//std::cout << speed << std::endl;
+			t1 = clock();
+			
+		}
+		if (t < 101)
+			t++;		
+		
+		
 		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
@@ -180,14 +186,13 @@ int main() {
 		}
 
 		glm::mat4 Save = Model;
-		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
-	
+		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));	
 		modelRenderer.sendMVP(Model);	
-		
+		Model = Save;
+
 		bool collision = false;
 		int objID = -1;		
-
-		Model = Save;
+		
 
 		// Ausgabe Position des schiffes
 		//std::cout << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
@@ -195,17 +200,15 @@ int main() {
 		// Geht die Gates durch
 		for (int i = aGate; i < gateList.size(); i++)
 		{
-			gate->setPosition(*gateList[i]);
-			std::vector <ColBox*> l = gate->getColBox();
-			ColBox *b = l[0];
-			// Collisionsdetection 
-			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates			
+			gate->setPosition(*gateList[i]);			
 			
+			// Collisionsdetection 
+			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates					
 			if (col.checkCollision(spaceShip.getColBox()[0]->addPosition(spaceShip.getPosition()),gate->getColBox()[0]->addPosition(gate->getPosition()))) {
 				collision = true;
 				objID = i;				
-			}					
-
+			}		
+			
 			// Collisions Box zum prüfen ob durchs Gate geflogen wurde.
 			ColBox gt = *new ColBox(Position(-1.5f, -2.0f, -0.1f), 3, 4, 0.2f);
 			ColBox st = *new ColBox(Position(0.0f, 0.0f, 2.5f, 0, 0), 0.0f, 0.0f, 0.5f);
@@ -216,8 +219,7 @@ int main() {
 				gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200,5,90));
 				grenzeZ = spaceShip.getPosition().getZ() + 40;
 				
-			}
-			
+			}			
 			// Zeichnet Gate
 			gate->draw(Model, programID);
 			Model = Save;
@@ -226,60 +228,44 @@ int main() {
 		// Wenn kein Gate in der Nähe = Schiff bewegen
 		if (!collision) {
 			//Spielbegrenzung
-			if (spaceShip.getPosition().getX() + spaceShipOnX >= -60 && spaceShip.getPosition().getX() + spaceShipOnX <= 60 && spaceShip.getPosition().getY() + spaceShipOnY >= -60 && spaceShip.getPosition().getY() + spaceShipOnY <= 60 && spaceShip.getPosition().getZ() + spaceShipOnZ < grenzeZ) {
-				spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ), 0, 0));
-				// Zeichnet Schiff
-				spaceShip.draw(Model, programID);
-				Model = Save;
-				Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+			if (spaceShip.getPosition().getX() + spaceShipOnX >= -60 && spaceShip.getPosition().getX() + spaceShipOnX <= 60 && spaceShip.getPosition().getY() + spaceShipOnY >= -60 && spaceShip.getPosition().getY() + spaceShipOnY <= 60 && spaceShip.getPosition().getZ() + spaceShipOnZ < grenzeZ) {				
+				moveShip = true;							
 			}
 			else {
-				spaceShip.draw(Model, programID);
-				Model = Save;
+				moveShip = false;
+				
 			}
+			
 		} else {
 			bool collision = false;
 			gate->setPosition(*gateList.at(objID));			
-			std::vector <ColBox*> colBoxList = gate->getColBox();
-			// Prüft die Kleineren Kollisionsboxen um das Gate.			
-			//for (int i = 1; i < colBoxList.size(); i++) {					
-			//	for (int j = 1; j < spaceShip.getColBox().size(); j++)				{	
+			
+			// Prüft die Kleineren Kollisionsboxen um das Gate.										
 			for (int i = 1; i < gate->getColCicle().size(); i++) {
-				for (int j = 1; j < spaceShip.getColBox().size(); j++) {
-					//if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))), gate->getColBox()[i]->addPosition(gate->getPosition()))) {
-					if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))),gate->getColCicle()[i]->addPosition(gate->getPosition()),*new ColCicle(gate->getPosition().adPosition(Position(-4,+2,0)),2,0.68))) {
+				for (int j = 1; j < spaceShip.getColBox().size(); j++) {					
+					if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))),gate->getColCicle()[i]->addPosition(gate->getPosition()),*new ColCicle(gate->getPosition(),3.7, 0.68))) {
 						collision = true;
 					}
-				}
-
-			
+				}		
 			}
-
-			/*
-			/// test//
 			
-			///////////// TEST //////////////////////
-			collision = false;
-			
-				if (gate->getColCicle()[0]->checkColision(gate->getPosition(), Position(spaceShip.getPosition().getX()+spaceShipOnX, spaceShip.getPosition().getY()+spaceShipOnY, spaceShip.getPosition().getZ()+spaceShipOnZ) , *spaceShip.getColBox()[0])) {
-					//printf("joss");
-					collision = true;
-				}
-*/
-			//////////////////////////////////////
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
-				spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ),0,0));		
-				// Zeichnet Schiff
-				spaceShip.draw(Model,programID);
-				Model = Save;
-				Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+						
+				moveShip = true;
+				
 			}
 			else {
-				spaceShip.draw(Model, programID);			
-				Model = Save;
+				moveShip = false;				
 			}
-		}					
+		}				
+
+		spaceShip.draw(Model, programID);
+		Model = Save;
+		if (moveShip) {
+			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ)));
+			Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
+		}
 		
 		// Lighting scene
 		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);

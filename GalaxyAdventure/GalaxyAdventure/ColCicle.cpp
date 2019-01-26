@@ -20,17 +20,6 @@ ColCicle::~ColCicle()
 	r = 0;
 }
 
-bool ColCicle::checkColision(Position p, Position p1, ColCicle c){
-	
-	if ( sqrt( pow(p1.getX()-p.getX(),2) + pow(p1.getY()-p.getY(),2)) <= r + c.r && 
-		p.getZ() + position.getZ() + colZ >= p1.getZ() + c.getPosition().getZ() && p1.getZ() + c.getPosition().getZ() + c.colZ >= p.getZ() + position.getZ()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-	
-}
 
 float ColCicle::getRadius()
 {

@@ -42,20 +42,6 @@ float ColBox::getColZ()
 	return colZ;
 }
 
-/*
-bool ColBox::checkCollision(Position p, Position p1, ColBox b)
-{
-
-	if (p.getX() + position.getX() + colX >= p1.getX() + b.getPosition().getX() && p1.getX() + b.getPosition().getX() + b.getColX() >= p.getX() + position.getX() &&
-		p.getY() + position.getY() + colY >= p1.getY() + b.getPosition().getY() && p1.getY() + b.getPosition().getY() + b.getColY() >= p.getY() + position.getY() &&
-		p.getZ() + position.getZ() + colZ >= p1.getZ() + b.getPosition().getZ() && p1.getZ() + b.getPosition().getZ() + b.getColZ() >= p.getZ() + position.getZ()) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}*/
-
 ColBox ColBox::addPosition(Position p)
 {
 	return *new ColBox(p.adPosition(position),colX,colY,colZ);

@@ -80,7 +80,7 @@ void Position::setPosition(float posX, float posY, float posZ, float angleX, flo
 
 Position Position::adPosition(Position p1)
 {
-	return Position(p1.getX()+getX(),p1.getY() + getY(), p1.getZ() + getZ());
+	return Position(p1.getX() + getX(), p1.getY() + getY(), p1.getZ() + getZ());
 }
 
 void Position::setPosition(Position p)
