@@ -3,6 +3,7 @@ class Position
 {
 public:
 	Position(float posX, float posY, float posZ, float angleX, float angleY);
+	Position(float posX, float posY, float posZ);
 	Position();
 	~Position();
 	float getX();
@@ -13,9 +14,10 @@ public:
 	void setAngleX(float angleX);
 	void setAngleY(float angleY);
 	void setPosition(float posX, float posY, float posZ, float angleX, float angleY);
+	void setPosition(Position p);
 	
 
-private:
+protected:
 	float x, y, z;
 	float xAngle;
 	float yAngle;

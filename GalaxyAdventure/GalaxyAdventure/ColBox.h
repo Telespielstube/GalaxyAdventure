@@ -1,25 +1,16 @@
 #pragma once
-#include "Position.h"
-class ColBox
+#include "Col.h"
+class ColBox : public Col
 {
 
 public:
 	ColBox();	
-	ColBox(float x, float y, float z, float cX, float cY, float cZ);
+	ColBox(Position p, float cX, float cY, float cZ);
 	virtual ~ColBox();
 	float getColX();
 	float getColY();
-	float getColZ();
-	float getPosX();
-	float getPosY();
-	float getPosZ();
+	float getColZ();	
 	bool checkCollision(Position p, Position p1, ColBox b);
-
 private:
-	float colX, colY, colZ, posX, posY, posZ;
-
-
-
-
-
+	float colX, colY, colZ;
 };

@@ -12,6 +12,15 @@ Position::Position(float posX, float posY, float posZ, float angleX, float angle
 
 }
 
+Position::Position(float posX, float posY, float posZ)
+{
+	x = posX;
+	y = posY;
+	z = posZ;
+	xAngle = 0;
+	yAngle = 0;
+}
+
 Position::Position()
 {
 	x = 0;
@@ -67,6 +76,15 @@ void Position::setPosition(float posX, float posY, float posZ, float angleX, flo
 	z = posZ;
 	xAngle = angleX;
 	yAngle = angleY;
+}
+
+void Position::setPosition(Position p)
+{
+	x = p.getX();
+	y = p.getY();
+	z = p.getZ();
+	xAngle = p.getAngleX();
+	yAngle = p.getAngleY();
 }
 
 

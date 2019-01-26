@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include "Position.h"
 #include "ColBox.h"
+#include "ColCicle.h"
 
 class RenderedObject
 {
@@ -14,7 +15,9 @@ public:
 	virtual void drawVertices(glm::mat4 &Model);
 	virtual void setPosition(Position p);
 	void addColBox(ColBox *b);  // Zum hinzufügen von Kollisionsboxen.
+	void addColCicle(ColCicle *c);  // Zum hinzufügen von Kollisionsboxen.
 	std::vector <ColBox*> getColBox();	// Speichert die Kolisionsboxen in einem Array, Index 0 = Main Kollisonsbox um das Gate
+	std::vector <ColCicle*> getColCicle();	// Speichert die Kolisionsboxen in einem Array, Index 0 = Main Kollisonsbox um das Gate
 	Position getPosition();		
 	
 	
@@ -35,6 +38,7 @@ protected:
 	GLuint texture;
 	GLuint textureID;	
 	std::vector<ColBox*> colBoxList;
+	std::vector<ColCicle*> colCicleList;
 
 private:
 	Position position;	

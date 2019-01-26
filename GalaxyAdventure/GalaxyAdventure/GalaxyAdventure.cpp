@@ -17,6 +17,8 @@
 #include "WindowInit.h"
 #include "Windows.h"
 #include "Star.h"
+#include "Col.h"
+#include "ColCicle.h"
 
 GLuint programID;
 glm::mat4 Projection;
@@ -122,24 +124,24 @@ int main() {
 	float grenzeZ = 40; // Spielfeldgrenze nach hinten
 	
 	printf("Steuerung: W Hoch , S Runter, Pfeiltasten Richtung \n");
+
+	////////////// TEST ////////////////////
+
+	ColCicle c1 = *new ColCicle(Position(0, 0, 1.9), 1, 2);
+	ColCicle c2 = *new ColCicle(Position(0, 0, 0), 1, 2);
+
+	if (c1.checkColision(c1.getPosition(), c2.getPosition(), c2))
+		printf("jo");
+
+	/////////////////////////////////////
+
 	//Game loop
 	do {	
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.01f, 0.01f, 0.01f, 0.01f);
 		
 
-		// Zeichnen der Sterne an den Seiten. werden Verschoben sobald sie aus dem Blickfeld sind.		
-		for (int i = 0; i < starField.size(); i++) {
-			if (starField.at(i)->getZ() >= spaceShip.getPosition().getZ()-300) 
-				starField.at(i)->setPosition(starField.at(i)->getX(), starField.at(i)->getY(), spaceShip.getPosition().getZ() - 1500,0,0);			
-			star->setPosition(*starField.at(i));
-			star->draw(Model, programID);
-		}
-		// Zeichnen der Sterne hinten. Bewegen sich mit dem Schiff mit
-		for (int i = 0; i < starField2.size(); i++) {
-			star->setPosition(*starField2.at(i));
-			star->draw(Model, programID);
-		}	
+		
 		
 		// Geschwindigkeitsberechnung
 		if (t == 50) {			
@@ -158,6 +160,20 @@ int main() {
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
 				
+
+		// Zeichnen der Sterne an den Seiten. werden Verschoben sobald sie aus dem Blickfeld sind.		
+		for (int i = 0; i < starField.size(); i++) {
+			if (starField.at(i)->getZ() >= spaceShip.getPosition().getZ() - 300)
+				starField.at(i)->setPosition(starField.at(i)->getX(), starField.at(i)->getY(), spaceShip.getPosition().getZ() - 1500, 0, 0);
+			star->setPosition(*starField.at(i));
+			star->draw(Model, programID);
+		}
+		// Zeichnen der Sterne hinten. Bewegen sich mit dem Schiff mit
+		for (int i = 0; i < starField2.size(); i++) {
+			star->setPosition(Position(starField2.at(i)->getX(), starField2.at(i)->getY(), spaceShip.getPosition().getZ() + starField2.at(i)->getZ()));
+			star->draw(Model, programID);
+		}
+
 		glm::mat4 Save = Model;
 		Model = glm::translate(Model, glm::vec3(1.5, 0, 0));
 	
@@ -180,19 +196,23 @@ int main() {
 			// Collisionsdetection 
 			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates			
 			
-			if (spaceShip.getColBox()[0]->checkCollision(spaceShip.getPosition(), gate->getPosition(),*b)) {				
+			if (spaceShip.getColBox()[0]->checkCollision(spaceShip.getPosition(), gate->getPosition(),*b)) {							
 				collision = true;
 				objID = i;
+				
 			}		
 
+			
+
 			// Collisions Box zum prüfen ob durchs Gate geflogen wurde.
-			ColBox gt = *new ColBox(-1.5f, -2.0f, -0.1f, 3, 4, 0.2f);
+			ColBox gt = *new ColBox(Position(-1.5f, -2.0f, -0.1f), 3, 4, 0.2f);
 			if (aGate == i)	
-			if ( gt.checkCollision(gate->getPosition(), spaceShip.getPosition(), *new ColBox(0, 0, + 2.5f,0,0,0.5) ) ) {
+			if ( gt.checkCollision(gate->getPosition(), spaceShip.getPosition(), *new ColBox(Position(0.0f, 0.0f, 2.5f,0,0),0.0f,0.0f,0.5f) ) ) {
 				std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 				aGate++;					
 				gateList.push_back(new Position(rand() % 30 - 15, rand() % 30 - 15, -40 - (i * 40) - 200,5,90));
 				grenzeZ = spaceShip.getPosition().getZ() + 40;
+				
 			}
 			
 			// Zeichnet Gate
@@ -229,6 +249,18 @@ int main() {
 			
 			}
 
+			/*
+			/// test//
+			
+			///////////// TEST //////////////////////
+			collision = false;
+			
+				if (gate->getColCicle()[0]->checkColision(gate->getPosition(), Position(spaceShip.getPosition().getX()+spaceShipOnX, spaceShip.getPosition().getY()+spaceShipOnY, spaceShip.getPosition().getZ()+spaceShipOnZ) , *spaceShip.getColBox()[0])) {
+					//printf("joss");
+					collision = true;
+				}
+*/
+			//////////////////////////////////////
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
 				spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ),0,0));		

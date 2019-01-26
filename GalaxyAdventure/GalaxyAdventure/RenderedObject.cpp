@@ -78,9 +78,19 @@ std::vector <ColBox*> RenderedObject::getColBox()
 	return colBoxList;
 }
 
+std::vector<ColCicle*> RenderedObject::getColCicle()
+{
+	return colCicleList;
+}
+
 void RenderedObject::addColBox(ColBox *b)
 {
 	colBoxList.push_back(b);
+}
+
+void RenderedObject::addColCicle(ColCicle * c)
+{
+	colCicleList.push_back(c);
 }
 
 /** Sets a specific position of the object.
@@ -92,6 +102,7 @@ void RenderedObject::addColBox(ColBox *b)
 void RenderedObject::setPosition(Position p)
 {
 	position.setPosition(p.getX(), p.getY(), p.getZ(), p.getAngleX(), p.getAngleY());	
+	
 }
 
 
