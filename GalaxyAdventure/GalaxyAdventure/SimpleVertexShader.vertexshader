@@ -14,6 +14,7 @@ out vec3 LightDirectionCameraWorld;
 out vec3 LightDirectionCameraSpaceShip;
 out vec3 LightDirectionCameraGate;
 out vec3 LightDirectionCameraStar;
+out vec3 LightDirectionCameraAstro;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 MVP;
@@ -23,6 +24,7 @@ uniform vec3 LightPositionWorld;
 uniform vec3 LightPositionSpaceShip;
 uniform vec3 LightPositionGate;
 uniform vec3 LightPositionStar;
+uniform vec3 LightPositionAstro;
 
 /** Lighting for objects and world.
 *	@param	objectToLight		the objects to light.
@@ -54,6 +56,7 @@ void main()
 	LightDirectionCameraSpaceShip = Lighting(LightPositionSpaceShip);
 	LightDirectionCameraGate = Lighting(LightPositionGate);
 	LightDirectionCameraStar = Lighting(LightPositionStar);
+	LightDirectionCameraAstro = Lighting(LightPositionAstro);
 
 	// Normal of the the vertex, in camera space
 	Normal_cameraspace = ( V * M * vec4(vertexNormal_modelspace, 0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.

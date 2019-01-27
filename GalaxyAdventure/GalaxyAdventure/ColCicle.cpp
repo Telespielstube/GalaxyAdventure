@@ -35,3 +35,8 @@ ColCicle ColCicle::addPosition(Position p)
 {
 	return *new ColCicle(p.adPosition(position),r,colZ);
 }
+
+ColCicle ColCicle::addScaleF(float s)
+{
+	return *new ColCicle(Position(0,0,0), r*s, colZ*s);
+}

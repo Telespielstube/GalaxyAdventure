@@ -132,6 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Astro.cpp" />
+    <ClCompile Include="AstroList.cpp" />
     <ClCompile Include="Col.cpp" />
     <ClCompile Include="ColBox.cpp" />
     <ClCompile Include="ColCicle.cpp" />
@@ -152,6 +154,8 @@
     <ClCompile Include="WindowInit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Astro.h" />
+    <ClInclude Include="AstroList.h" />
     <ClInclude Include="Col.h" />
     <ClInclude Include="ColBox.h" />
     <ClInclude Include="ColCicle.h" />

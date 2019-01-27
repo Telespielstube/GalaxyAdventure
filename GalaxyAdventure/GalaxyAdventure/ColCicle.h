@@ -11,6 +11,7 @@ public:
 	float getRadius();
 	float getColZ();
 	ColCicle addPosition(Position p);
+	ColCicle addScaleF(float s);
 
 protected:
 	float r, colZ;

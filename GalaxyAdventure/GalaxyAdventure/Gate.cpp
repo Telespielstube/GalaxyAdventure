@@ -28,7 +28,7 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 	//  ******************** Erstellung Kollisionsbox ums gate   *********************************
 
 		// Erste Kollisionsbox Main box dient zur erkennung das Schiff in der nähe ist zum Gate
-	addColBox(new ColBox( Position(- 5.0f,  - 5.0f,  - 3.2f,0.0f,0.0f), 12.0f, 12.0f, 4));
+	addColBox(new ColBox( Position(- 5.0f,  - 5.0f,  - 3.2f), 12.0f, 12.0f, 4));
 
 	
 

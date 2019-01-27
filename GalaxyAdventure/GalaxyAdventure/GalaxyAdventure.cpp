@@ -20,6 +20,8 @@
 #include "Col.h"
 #include "ColCicle.h"
 #include "Collision.h"
+#include "Astro.h"
+#include "AstroList.h"
 
 
 GLuint programID;
@@ -55,6 +57,8 @@ int main() {
 	GLuint gateTextureID = glGetUniformLocation(programID, "gateObjTexture");
 	GLuint starTexture = loadBMP("../Texture/starTexture.bmp");
 	GLuint starTextureID = glGetUniformLocation(programID, "starObjTexture");
+	GLuint astroTexture = loadBMP("../Texture/astroTexture.bmp");
+	GLuint astroTextureID = glGetUniformLocation(programID, "astroTexture");
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
@@ -76,19 +80,27 @@ int main() {
 	Spaceship spaceShip("../Object/Ship.obj", modelRenderer, shipTexture, shipTextureID);
 	Gate *gate;
 	Star *star;
+	Astro *astro;
 	RandomNumber randomNumber;
 	randomNumber.initializeGenerator();
 	Controls controls;	
 	std::vector<Position*> gateList;
+	std::vector<AstroList*> astroList;
 	int gateListSize = 5;
-
 	gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
-	gate->setPosition(Position(0,0,0,0,0));	
+	gate->setPosition(Position(0,0,0));	
 
 	// Erstellt die Liste mit den Gates
 	for (int i = 0; i < gateListSize; i++) {		
-			gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40), 5, 90));			
+			gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40), 5, 90,0));			
 	}	
+
+	astro = new Astro("../Object/Astro3.obj", modelRenderer, astroTexture, astroTextureID, 2);
+	astro->setPosition(Position(0, 0, -10));
+
+	for (int i = 0; i < 5; i++) {
+		astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40)), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
+	}
 		
 
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
@@ -96,19 +108,19 @@ int main() {
 	std::vector<Position*> starField2;
 	int numberOfStars = 80;
 	star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-	star->setPosition(Position(0,0,0,0,0));
+	star->setPosition(Position(0,0,0));
 	for (int i = 0; i < numberOfStars; i++) {
 		//Linke Feld
-		starField.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f),0,0));
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 		//Rechte Feld
-		starField.push_back(new Position(randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f), 0, 0));
+		starField.push_back(new Position(randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 		//Obere Feld
-		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f), 0, 0));
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(400.0f, 1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 		//Untere Feld
-		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f), 0, 0));
+		starField.push_back(new Position(randomNumber.generateRandomNumber(-800.0f, 800.0f), randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
 		// Hintere Feld
 		if (i % 4 == 0) {
-			starField2.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-1000.0f, -1500.0f), 0, 0));
+			starField2.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-1000.0f, -1500.0f)));
 		}			
 	}
 
@@ -175,7 +187,7 @@ int main() {
 		// Zeichnen der Sterne an den Seiten. werden Verschoben sobald sie aus dem Blickfeld sind.		
 		for (int i = 0; i < starField.size(); i++) {
 			if (starField.at(i)->getZ() >= spaceShip.getPosition().getZ() - 300)
-				starField.at(i)->setPosition(starField.at(i)->getX(), starField.at(i)->getY(), spaceShip.getPosition().getZ() - 1500, 0, 0);
+				starField.at(i)->setPosition(Position(starField.at(i)->getX(), starField.at(i)->getY(), spaceShip.getPosition().getZ() - 1500));
 			star->setPosition(*starField.at(i));
 			star->draw(Model, programID);
 		}
@@ -211,14 +223,15 @@ int main() {
 			
 			// Collisions Box zum prüfen ob durchs Gate geflogen wurde.
 			ColBox gt = *new ColBox(Position(-1.5f, -2.0f, -0.1f), 3, 4, 0.2f);
-			ColBox st = *new ColBox(Position(0.0f, 0.0f, 2.5f, 0, 0), 0.0f, 0.0f, 0.5f);
+			ColBox st = *new ColBox(Position(0.0f, 0.0f, 2.5f), 0.0f, 0.0f, 0.5f);
 			if (aGate == i)	
 			if (col.checkCollision(gt.addPosition(gate->getPosition()), st.addPosition(spaceShip.getPosition()))) {
 				std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 				aGate++;					
 				
-				gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) - 200, 5, 90));
+				gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) - 200, 5, 90,0));
 				grenzeZ = spaceShip.getPosition().getZ() + 40;
+				astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) -200), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
 				
 			}			
 			// Zeichnet Gate
@@ -259,7 +272,43 @@ int main() {
 			else {
 				moveShip = false;				
 			}
-		}				
+		}	
+		
+		int aID = -1;
+		// Collisionsdetection  Astros					
+		for (int i = 0; i < astroList.size(); i++)
+		{					
+				astro->setPosition(astroList[i]->getPosition());
+				if (col.checkCollision(spaceShip.getColBox()[0]->addPosition(spaceShip.getPosition()), astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()))) {
+					// Prüft die Kleineren Kollisionsboxen.					
+					for (int j = 1; j < spaceShip.getColBox().size(); j++) {
+						if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX, spaceShipOnY, spaceShipOnZ))), astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()))) {
+							moveShip = false;
+							aID = i;
+						}
+					}
+				}
+				// Collisionsdetection 
+			
+					// Prüft die Kleineren Kollisionsboxen um das Gate.										
+				for (int j = 0; j < gateList.size(); j++) {		
+					gate->setPosition(*gateList.at(j));					
+					if (col.checkCollision(astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()), gate->getColCicle()[0]->addPosition(gate->getPosition()))) {
+						aID = i;
+					}			
+					
+				}
+				for (int j = 0; j < astroList.size(); j++) {				
+					if (i != j)
+					if (col.checkCollision(astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()), astro->getColCicle()[0]->addScaleF(astroList[j]->getSize()).addPosition(astroList[j]->getPosition()) )) {
+						aID = i;
+					}
+
+				}
+			
+		}
+		
+
 
 		spaceShip.draw(Model, programID);
 		Model = Save;
@@ -270,6 +319,38 @@ int main() {
 			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() - spaceShipOnX*2), (spaceShip.getPosition().getY() - spaceShipOnY*2), (spaceShip.getPosition().getZ() - spaceShipOnZ*2)));
 			Model = glm::translate(Model, glm::vec3(+spaceShipOnX*2, +spaceShipOnY*2, +spaceShipOnZ*2));
 		}
+
+
+		for (int i = 0; i < astroList.size(); i++)
+		{
+			Position aP = astroList[i]->getPosition();
+			Position aD = astroList[i]->getDirection();
+			float s = astroList[i]->getSize();
+			astro->setScaleF(s);
+			astro->setPosition(aP);
+			if (aID != i) {				
+				float aSpeed = astroList[i]->getSpeed();				
+				astroList[i]->setPosition(aP.adPosition(Position(aD.getX()*aSpeed, aD.getY()*aSpeed, aD.getZ()*aSpeed,0.2,0.1,0.134)));
+				//Löscht Astros die weit weg sind.
+				if (aP.getX() >= 80 || aP.getX() <= -80 || aP.getY() >= 60 || aP.getY() <= -60 || aP.getZ() >= spaceShip.getPosition().getZ() + 20  || aP.getZ() <= spaceShip.getPosition().getZ() - 400)
+					astroList.erase(astroList.begin() + i);
+			} else {					
+				if (s >= 0.5) {
+					for (int i = 0; i < 5; i++)
+					{
+						float x, y, z;
+						x =rand() % 2 - 1;
+						y = rand() % 2 - 1;
+						z = rand() % 2 - 1;
+						astroList.push_back(new AstroList(aP.adPosition(Position(x*s,y*s,z*s)), Position(x, y, z), 0.03f, s*0.3));
+					}	
+					
+				}
+				astroList.erase(astroList.begin() + i);
+			}
+			astro->draw(Model, programID);			
+		}
+		
 		
 		// Lighting scene
 		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);

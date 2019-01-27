@@ -9,7 +9,7 @@
 */
 RenderedObject::RenderedObject(const char *filename, Renderer &renderer) : m_renderer(renderer)
 {
-	position.setPosition(0, 0, 0,0,0);    
+	position.setPosition(Position(0, 0, 0));    
 	
 
 	bool object = loadObject(filename, vertices, uvs, normals);
@@ -101,7 +101,7 @@ void RenderedObject::addColCicle(ColCicle * c)
 */
 void RenderedObject::setPosition(Position p)
 {
-	position.setPosition(p.getX(), p.getY(), p.getZ(), p.getAngleX(), p.getAngleY());	
+	position.setPosition(p.getX(), p.getY(), p.getZ(), p.getAngleX(), p.getAngleY(), p.getAngleZ());	
 	
 }
 

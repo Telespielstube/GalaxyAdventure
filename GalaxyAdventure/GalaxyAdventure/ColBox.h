@@ -12,6 +12,7 @@ public:
 	float getColZ();	
 	
 	ColBox addPosition(Position p);
+
 private:
 	float colX, colY, colZ;
 };

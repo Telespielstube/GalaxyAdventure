@@ -8,6 +8,7 @@ in vec3 LightDirectionCameraWorld;
 in vec3 LightDirectionCameraSpaceShip;
 in vec3 LightDirectionCameraGate;
 in vec3 LightDirectionCameraStar;
+in vec3 LightDirectionCameraAstro;
 
 out vec4 fragmentColor;
 
@@ -15,6 +16,7 @@ uniform sampler2D objectTexture;
 uniform vec3 LightPositionWorld;
 uniform vec3 LightPositionSpaceShip;
 uniform vec3 LightPositionGate;
+uniform vec3 LightPositionAstro;
 uniform vec3 LightPositionStar;
 uniform sampler2D myTextureSampler;
 
@@ -50,7 +52,10 @@ void main()
 					// Gate
 					lighting(0.81f, 0.71f, 0.23f, 90.0f, UV, Position_worldspace, Normal_cameraspace, EyeDirection_cameraspace, LightDirectionCameraGate, LightPositionGate) +
 					// Star
-					lighting(1.0f, 1.0f, 1.0f, 0.0f, UV, Position_worldspace, Normal_cameraspace, EyeDirection_cameraspace, LightDirectionCameraStar, LightPositionStar), 1.0);
+					lighting(1.0f, 1.0f, 1.0f, 0.0f, UV, Position_worldspace, Normal_cameraspace, EyeDirection_cameraspace, LightDirectionCameraStar, LightPositionStar) +
+					//Astro
+					lighting(0.0f, 0.0f, 0.0f, 0.0f, UV, Position_worldspace, Normal_cameraspace, EyeDirection_cameraspace, LightDirectionCameraAstro, LightPositionAstro), 1.0);
+
 				
 	vec3 MaterialDiffuseColor = texture( myTextureSampler, UV ).rgb;
 	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
