@@ -42,6 +42,4 @@ protected:
 
 private:
 	Position position;	
-	
-	
 };

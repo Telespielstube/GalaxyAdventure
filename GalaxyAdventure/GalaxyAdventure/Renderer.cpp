@@ -1,5 +1,12 @@
 #include "Renderer.h"
 
+/** Constructor
+*
+*	@param	progID		ID which refers to the running program.
+*	@param	proj		Projection matrix.
+*	@param	view		View matrix.
+*
+*/
 Renderer::Renderer(GLuint progID, glm::mat4 proj, glm::mat4 view)
 {
 	programID = progID;
@@ -7,13 +14,10 @@ Renderer::Renderer(GLuint progID, glm::mat4 proj, glm::mat4 view)
 	View = view;
 }
 
-Renderer::~Renderer()
-{
-}
-
 /** Holds the model view projection matrix.
 *
 *	@param &Model	Memory address of the model.
+*
 */
 void Renderer::sendMVP(glm::mat4 &Model)
 {
@@ -24,4 +28,9 @@ void Renderer::sendMVP(glm::mat4 &Model)
 	glUniformMatrix4fv(glGetUniformLocation(programID, "M"), 1, GL_FALSE, &Model[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(programID, "V"), 1, GL_FALSE, &View[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(programID, "P"), 1, GL_FALSE, &Projection[0][0]);
+}
+
+// Destructor
+Renderer::~Renderer()
+{
 }

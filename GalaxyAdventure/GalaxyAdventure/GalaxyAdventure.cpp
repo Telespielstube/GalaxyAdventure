@@ -1,4 +1,3 @@
-#include <algorithm>  
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -13,7 +12,6 @@
 #include "Controls.h"
 #include "Gate.h"
 #include "RandomNumber.h"
-#include "cube.h"
 #include "WindowInit.h"
 #include "Windows.h"
 #include "Star.h"
@@ -23,15 +21,15 @@
 #include "Astro.h"
 #include "AstroList.h"
 
-
 GLuint programID;
 glm::mat4 Projection;
 glm::mat4 View;
 glm::mat4 Model;
 clock_t t1;
 
+int main() 
+{
 
-int main() {
 	WindowInit windowInit;
 	glewExperimental = true;
 	Collision col;
@@ -86,23 +84,20 @@ int main() {
 	Controls controls;	
 	std::vector<Position*> gateList;
 	std::vector<AstroList*> astroList;
+	
+	// Erstellt die Liste mit den Gates und Asteroiden
 	int gateListSize = 5;
 	gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
 	gate->setPosition(Position(0,0,0));	
-
-	// Erstellt die Liste mit den Gates
 	for (int i = 0; i < gateListSize; i++) {		
 			gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40), 5, 90,0));			
 	}	
-
 	astro = new Astro("../Object/Astro3.obj", modelRenderer, astroTexture, astroTextureID, 2);
 	astro->setPosition(Position(0, 0, -10));
-
 	for (int i = 0; i < 5; i++) {
 		astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40)), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
 	}
 		
-
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
 	std::vector<Position*> starField;
 	std::vector<Position*> starField2;
@@ -178,11 +173,11 @@ int main() {
 		if (t < 101)
 			t++;		
 		
-		
+
 		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
-				
+
 
 		// Zeichnen der Sterne an den Seiten. werden Verschoben sobald sie aus dem Blickfeld sind.		
 		for (int i = 0; i < starField.size(); i++) {
@@ -204,10 +199,6 @@ int main() {
 
 		bool collision = false;
 		int objID = -1;		
-		
-
-		// Ausgabe Position des schiffes
-		//std::cout << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
 
 		// Geht die Gates durch
 		for (int i = aGate; i < gateList.size(); i++)
@@ -308,8 +299,6 @@ int main() {
 			
 		}
 		
-
-
 		spaceShip.draw(Model, programID);
 		Model = Save;
 		if (moveShip) {
@@ -352,7 +341,7 @@ int main() {
 		}
 		
 		
-		// Lighting scene
+		// Lighting the whole scene
 		glUniform3f(glGetUniformLocation(programID, "LightPositionWorld"), lightPositionWorld.x, lightPositionWorld.y, lightPositionWorld.z);
 		lightPositionWorld.z += controls.moveSpaceshipOnZ(window, speed);
 		
@@ -362,6 +351,12 @@ int main() {
 		glfwPollEvents();
 
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+	
+	// Destruct all objects.
+	gate->~Gate();
+	astro->~Astro();
+	star->~Star();
+
 	// Delete the text's VBO, the shader and the texture
 	glDeleteProgram(programID);
 	glfwTerminate();

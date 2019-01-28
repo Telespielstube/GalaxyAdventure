@@ -3,10 +3,10 @@
 #include <GLFW\glfw3.h>
 #include "WindowInit.h"
 
+// Standard constructor
 WindowInit::WindowInit()
 {
 }
-
 
 //Initializes the OpenGL library GLFW.
 bool WindowInit::initializeGLFW()
@@ -53,6 +53,7 @@ GLFWwindow* WindowInit::createMainWindow(int width, int height, const char *titl
 	return window;
 }
 
+// Destructor
 WindowInit::~WindowInit()
 {
 }

@@ -139,7 +139,6 @@
     <ClCompile Include="ColCicle.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Controls.cpp" />
-    <ClCompile Include="cube.cpp" />
     <ClCompile Include="GalaxyAdventure.cpp" />
     <ClCompile Include="Gate.cpp" />
     <ClCompile Include="objloader.cpp" />
@@ -161,7 +160,6 @@
     <ClInclude Include="ColCicle.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Controls.h" />
-    <ClInclude Include="cube.h" />
     <ClInclude Include="Gate.h" />
     <ClInclude Include="objloader.h" />
     <ClInclude Include="Position.h" />

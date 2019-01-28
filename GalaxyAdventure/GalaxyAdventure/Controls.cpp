@@ -1,15 +1,14 @@
 #include <GLFW/glfw3.h>
 #include "Controls.h"
 
-
+// Standard constructor
 Controls::Controls()
 {
 }
 
-
-
 /** Moves the spaceship on the x axis.
 *	
+*	@return		x axis position.
 */
 float Controls::moveSpaceshipOnX(GLFWwindow *window, float speed)
 {
@@ -29,6 +28,7 @@ float Controls::moveSpaceshipOnX(GLFWwindow *window, float speed)
 
 /** Moves the spaceship on the y axis.
 *
+*	@return	y axis position.
 */
 float Controls::moveSpaceshipOnY(GLFWwindow *window, float speed)
 {
@@ -47,6 +47,7 @@ float Controls::moveSpaceshipOnY(GLFWwindow *window, float speed)
 
 /** Moves the spaceship on the z axis.
 *
+*	@return	z axis position.
 */
 float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 {
@@ -63,8 +64,7 @@ float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 	return positionZ;
 }
 
-
-
+// Destructor
 Controls::~Controls()
 {
 }

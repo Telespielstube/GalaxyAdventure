@@ -54,6 +54,5 @@ void Spaceship::draw(glm::mat4 &Model, GLuint programID)
 	Model = Save;
 }
 
-/** Destructor
-*/
+// Destructor
 Spaceship::~Spaceship() {}

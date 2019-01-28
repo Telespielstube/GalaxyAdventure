@@ -24,7 +24,7 @@ Star::Star(const char *filename, Renderer &renderer, GLuint starTexture, GLuint 
 
 /** Draws the star on screen.
 *
-*	@param	Model			the scene in which the game takes place
+*	@param Model			the scene in which the game takes place
 *	@param programID		an id for the current application
 *
 */
