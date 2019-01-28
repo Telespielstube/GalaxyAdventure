@@ -1,9 +1,15 @@
 #include "Astro.h"
 #include "objloader.h"
 
-
-
-
+/** Constructor
+*
+*	@param	filename		path to the object file.
+*	@param	renderer		holds the 3 matrices Model, View, Perspective information.
+*	@param	gateTexture		rgb data from the image.
+*	@param	TextureID		ID for the texture of the object.
+*	@param	scaleF			scale factor of the object.
+*
+*/
 Astro::Astro(const char * filename, Renderer & renderer, GLuint gateTexture, GLuint TextureID, float scaleF) : RenderedObject(filename, renderer)
 {
 	texture = gateTexture;
@@ -14,6 +20,7 @@ Astro::Astro(const char * filename, Renderer & renderer, GLuint gateTexture, GLu
 
 }
 
+//Destructor
 Astro::~Astro()
 {
 	glDeleteBuffers(1, &vertexbuffer);
@@ -21,6 +28,11 @@ Astro::~Astro()
 	glDeleteBuffers(1, &normalbuffer);
 }
 
+/** Draws the object and aligns it.
+*
+*	@param	Model	The object to draw on screen.
+*
+*/
 void Astro::draw(glm::mat4 & Model, GLuint programID)
 {
 	glActiveTexture(GL_TEXTURE0);
@@ -47,11 +59,23 @@ void Astro::draw(glm::mat4 & Model, GLuint programID)
 	Model = Save;
 }
 
+/** GEts the scale of the object.
+*
+*	@return		scale factor.
+*
+*/
 float Astro::getScaleF()
 {
 	return scaleFactor;
 }
 
+/** Sets directon of the asteroid.
+*
+*	@param	x	position on x axis.
+*	@param	y	position on y axis.
+*	@param	z	position on z axis.
+*
+*/
 void Astro::setDirection(float x, float y, float z)
 {
 	dX = x;
@@ -59,6 +83,11 @@ void Astro::setDirection(float x, float y, float z)
 	dZ = z;
 }
 
+/** Sets the scale of the object.
+*
+*	@param	s		scale factor.
+*
+*/
 void Astro::setScaleF(float s)
 {
 	scaleFactor = s;

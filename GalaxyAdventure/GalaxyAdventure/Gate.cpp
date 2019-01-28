@@ -13,8 +13,10 @@ float scaleFactor = 1.0f;
 
 /** Constructor
 *
-*	@param	filename	path to the object file.
-*	@param	renderer	holds the 3 matrices Model, View, Perspective information.
+*	@param	filename		path to the object file.
+*	@param	renderer		holds the 3 matrices Model, View, Perspective information.
+*	@param	gateTexture		rgb data from the image.
+*	@param	TextureID		ID for the texture of the object.
 *
 */
 Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint TextureID) : RenderedObject(filename, renderer)

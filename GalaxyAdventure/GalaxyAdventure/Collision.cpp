@@ -1,16 +1,23 @@
 #include "Collision.h"
 
 
-
+// Constructor
 Collision::Collision()
 {
 }
 
-
+// Destructor
 Collision::~Collision()
 {
 }
 
+/** Checks if a collision is happening.
+*
+*	@param	b1		Collision box.
+*	@param	b1		Collision box.
+*
+*	@return			true if a collision is detected.
+*/
 bool Collision::checkCollision(ColBox b1, ColBox b2)
 {
 	if (b1.getPosition().getX() + b1.getColX() >= b2.getPosition().getX() && b2.getPosition().getX() + b2.getColX() >= b1.getPosition().getX() &&
@@ -23,6 +30,14 @@ bool Collision::checkCollision(ColBox b1, ColBox b2)
 	}
 }
 
+/** Checks if a collision is happening.
+*
+*	@param	b1		Collision box.
+*	@param	c1		Collision circle.
+*
+*	@return			true if a collision is detected.
+*
+*/
 bool Collision::checkCollision(ColBox b1, ColCicle c1)
 {
 	float x = b1.getPosition().getX();
@@ -69,6 +84,14 @@ bool Collision::checkCollision(ColBox b1, ColCicle c1)
 	return false;
 }
 
+/** Checks if a collision is happening.
+*
+*	@param	b1		Collision box.
+*	@param	c1		Collision circle.
+*	@param	c2		2. collision circle.
+*
+*	@return			true if a collision is detected.
+*/
 bool Collision::checkCollision(ColBox b1, ColCicle c1, ColCicle c2)
 {
 		bool col = checkCollision(b1, c1);
@@ -83,6 +106,13 @@ bool Collision::checkCollision(ColBox b1, ColCicle c1, ColCicle c2)
 	return col;
 }
 
+/** Checks if a collision is happening.
+*
+*	@param	c1		Collision circle.
+*	@param	c2		Collision circle.
+*
+*	@return			true if a collision is detected.
+*/
 bool Collision::checkCollision(ColCicle c1, ColCicle c2)
 {
 	if ( sqrt( pow(c2.getPosition().getX()-c1.getPosition().getX(),2) + pow(c2.getPosition().getY()-c1.getPosition().getY(),2)) <= c1.getRadius() + c2.getRadius() && 

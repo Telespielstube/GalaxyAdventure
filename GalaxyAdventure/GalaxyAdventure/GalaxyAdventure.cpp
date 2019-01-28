@@ -56,7 +56,7 @@ int main()
 	GLuint starTexture = loadBMP("../Texture/starTexture.bmp");
 	GLuint starTextureID = glGetUniformLocation(programID, "starObjTexture");
 	GLuint astroTexture = loadBMP("../Texture/astroTexture.bmp");
-	GLuint astroTextureID = glGetUniformLocation(programID, "astroTexture");
+	GLuint astroTextureID = glGetUniformLocation(programID, "astroObjTexture");
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LIGHTING);
@@ -177,7 +177,6 @@ int main()
 		float spaceShipOnX = controls.moveSpaceshipOnX(window, speed);
 		float spaceShipOnY = controls.moveSpaceshipOnY(window, speed);
 		float spaceShipOnZ = controls.moveSpaceshipOnZ(window, speed);
-
 
 		// Zeichnen der Sterne an den Seiten. werden Verschoben sobald sie aus dem Blickfeld sind.		
 		for (int i = 0; i < starField.size(); i++) {
@@ -346,7 +345,7 @@ int main()
 		lightPositionWorld.z += controls.moveSpaceshipOnZ(window, speed);
 		
 		glFlush();
-		// Swap buffers
+		// Swap the back(rendering commands) and the front(final output image that is shown) buffers.
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
