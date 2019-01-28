@@ -2,6 +2,10 @@
 class WindowInit
 {
 
+/*	Initalisieren des Fensters
+
+	@autor	
+*/
 public:
 	WindowInit();
 	bool initializeGLFW();

@@ -1,4 +1,9 @@
 #pragma once
+
+/*	Zur steuerung des Schiffes
+
+	@autor	Martina Brüning
+*/
 class Controls
 {
 public:

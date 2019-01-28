@@ -1,6 +1,12 @@
 #pragma once
 #include "RenderedObject.h"
 
+
+
+/*	Enthält das Objekt eine Tores
+
+	@autor	Martina Brüning
+*/
 class Gate : public RenderedObject
 {
 public:

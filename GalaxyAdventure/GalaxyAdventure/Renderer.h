@@ -3,6 +3,10 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <GL/glew.h>
 
+/*	Renderer
+
+	@autor
+*/
 class Renderer
 {
 public:

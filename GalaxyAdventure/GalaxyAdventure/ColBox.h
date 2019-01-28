@@ -1,5 +1,10 @@
 #pragma once
 #include "Col.h"
+
+/*	KollisionBox in Form eines Rechteckes
+
+	@autor	Vassilios Tsankis s0558527
+*/
 class ColBox : public Col
 {
 

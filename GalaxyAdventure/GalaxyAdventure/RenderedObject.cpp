@@ -68,26 +68,46 @@ void RenderedObject::drawVertices(glm::mat4 &Model)
 	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
 
+/* Gibt die Position des Objektes wieder
+
+	@return
+*/
 Position RenderedObject::getPosition()
 {
 	return position;
 }
 
+/*	Gibt die KollisionsBoxenliste zurück
+
+	@return
+*/
 std::vector <ColBox*> RenderedObject::getColBox()
 {
 	return colBoxList;
 }
 
+/*	Gibt die KollisionsBoxenliste zurück
+
+	@return
+*/
 std::vector<ColCicle*> RenderedObject::getColCicle()
 {
 	return colCicleList;
 }
 
+/*	Fügt eine KollisionsBox in form eines Rechtekes hinzu
+
+	@param	b	KollisionsBox
+*/
 void RenderedObject::addColBox(ColBox *b)
 {
 	colBoxList.push_back(b);
 }
 
+/*	Fügt eine KollisionsBox in form eines Zylinders hinzu
+
+	@param	b	KollisionsBox
+*/
 void RenderedObject::addColCicle(ColCicle * c)
 {
 	colCicleList.push_back(c);

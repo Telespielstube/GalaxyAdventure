@@ -13,7 +13,6 @@
 #include "Controls.h"
 #include "Gate.h"
 #include "RandomNumber.h"
-#include "cube.h"
 #include "WindowInit.h"
 #include "Windows.h"
 #include "Star.h"
@@ -30,7 +29,11 @@ glm::mat4 View;
 glm::mat4 Model;
 clock_t t1;
 
+/*	Main
 
+	@autor	Vassilios Tsanakis s0558527
+	@autor	Martina Brüning	
+*/
 int main() {
 	WindowInit windowInit;
 	glewExperimental = true;
@@ -77,6 +80,7 @@ int main() {
 	glm::vec4 lightPositionWorld = Model * glm::vec4(.0f, 30.0f, 100.0f, 1.0f);
  
 	Renderer modelRenderer(programID, Projection, View);
+	//Erzeugt das SchiffObjekt
 	Spaceship spaceShip("../Object/Ship.obj", modelRenderer, shipTexture, shipTextureID);
 	Gate *gate;
 	Star *star;
@@ -87,6 +91,8 @@ int main() {
 	std::vector<Position*> gateList;
 	std::vector<AstroList*> astroList;
 	int gateListSize = 5;
+
+	//Erzeugt das Gateobjekt
 	gate = new Gate("../Object/Gate.obj", modelRenderer, gateTexture, gateTextureID);
 	gate->setPosition(Position(0,0,0));	
 
@@ -95,20 +101,25 @@ int main() {
 			gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40), 5, 90,0));			
 	}	
 
+	//Erzeugt das Astro Objekt
 	astro = new Astro("../Object/Astro3.obj", modelRenderer, astroTexture, astroTextureID, 2);
-	astro->setPosition(Position(0, 0, -10));
+	
 
+	//Generiert	die Asteroiden auf dem Spielfeld
 	for (int i = 0; i < 5; i++) {
 		astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40)), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
 	}
 		
 
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
-	std::vector<Position*> starField;
-	std::vector<Position*> starField2;
-	int numberOfStars = 80;
+	std::vector<Position*> starField;	// Sternen an den Seiten
+	std::vector<Position*> starField2;	// Sterne Hinten (Die nicht erreicht werden sollen)
+	int numberOfStars = 80;	// Anzahl der Sterne pro Seite!
+
+	//Erzeugt das Sternen Objekt
 	star = new Star("../Object/Star.obj", modelRenderer, starTexture, starTextureID);
-	star->setPosition(Position(0,0,0));
+	
+
 	for (int i = 0; i < numberOfStars; i++) {
 		//Linke Feld
 		starField.push_back(new Position(randomNumber.generateRandomNumber(-400.0f, -1500.0f), randomNumber.generateRandomNumber(-400.0f, 400.0f), randomNumber.generateRandomNumber(-500.0f, -1500.0f)));
@@ -309,18 +320,22 @@ int main() {
 		}
 		
 
-
+		// Zeichnet das Schiff
 		spaceShip.draw(Model, programID);
 		Model = Save;
+
+		// Prüft ob sich das Schiff bewegen darf oder bei Collision nicht.
 		if (moveShip) {
 			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() + spaceShipOnX), (spaceShip.getPosition().getY() + spaceShipOnY), (spaceShip.getPosition().getZ() + spaceShipOnZ)));
 			Model = glm::translate(Model, glm::vec3(-spaceShipOnX, -spaceShipOnY, -spaceShipOnZ));
 		} else {
-			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() - spaceShipOnX*2), (spaceShip.getPosition().getY() - spaceShipOnY*2), (spaceShip.getPosition().getZ() - spaceShipOnZ*2)));
+			// Setzt das Schiff in die Gegenrichtung 
+			spaceShip.setPosition(*new Position((spaceShip.getPosition().getX() - spaceShipOnX*2), (spaceShip.getPosition().getY() - spaceShipOnY*2), (spaceShip.getPosition().getZ() - spaceShipOnZ*2)));			
 			Model = glm::translate(Model, glm::vec3(+spaceShipOnX*2, +spaceShipOnY*2, +spaceShipOnZ*2));
 		}
 
 
+		// Kollisionsprüfung der Asteros
 		for (int i = 0; i < astroList.size(); i++)
 		{
 			Position aP = astroList[i]->getPosition();
@@ -334,7 +349,8 @@ int main() {
 				//Löscht Astros die weit weg sind.
 				if (aP.getX() >= 80 || aP.getX() <= -80 || aP.getY() >= 60 || aP.getY() <= -60 || aP.getZ() >= spaceShip.getPosition().getZ() + 20  || aP.getZ() <= spaceShip.getPosition().getZ() - 400)
 					astroList.erase(astroList.begin() + i);
-			} else {					
+			} else {				
+				// Wenn der Astro kleiner als 0.5 ist wird er nur gelöscht.
 				if (s >= 0.5) {
 					for (int i = 0; i < 5; i++)
 					{
@@ -343,11 +359,12 @@ int main() {
 						y = rand() % 2 - 1;
 						z = rand() % 2 - 1;
 						astroList.push_back(new AstroList(aP.adPosition(Position(x*s,y*s,z*s)), Position(x, y, z), 0.03f, s*0.3));
-					}	
-					
+					}						
 				}
+				//Löscht den Astro
 				astroList.erase(astroList.begin() + i);
 			}
+			// Zeichnen der Astros
 			astro->draw(Model, programID);			
 		}
 		

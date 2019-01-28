@@ -1,8 +1,10 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+/*	Laden der Texturen
 
-// Load a .BMP file using our custom loader
+	@autor	Martina Brüning
+*/
 GLuint loadBMP(const char * imagepath);
 GLuint loadDDS(const char * imagepath);
 #endif

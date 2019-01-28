@@ -7,6 +7,10 @@
 #include "ColBox.h"
 #include "ColCicle.h"
 
+/*	Rendert die Objekte
+
+	@autor
+*/
 class RenderedObject
 {
 public:
@@ -41,7 +45,7 @@ protected:
 	std::vector<ColCicle*> colCicleList;
 
 private:
-	Position position;	
+	Position position;	// Position des Objektes im Raum
 	
 	
 };

@@ -12,10 +12,10 @@
 float scaleFactor = 1.0f;
 
 /** Constructor
-*
-*	@param	filename	path to the object file.
-*	@param	renderer	holds the 3 matrices Model, View, Perspective information.
-*
+
+	@param	filename	path to the object file.
+	@param	renderer	holds the 3 matrices Model, View, Perspective information.
+
 */
 Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint TextureID) : RenderedObject(filename, renderer)
 {
@@ -36,10 +36,10 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 	
 }
 
-/** Draws the object and aligns it.
-*
-*	@param	Model	Object to draw on screen.
-*
+/* Draws the object and aligns it.
+
+	@param	Model	Object to draw on screen.
+
 */
 void Gate::draw(glm::mat4 &Model, GLuint programID)
 {	
@@ -68,8 +68,7 @@ float Gate::getScaleF()
 	return scaleFactor;
 }
 
-/** Destructor of Gate object
-*
+/* Destructor of Gate object
 */
 Gate::~Gate()
 {

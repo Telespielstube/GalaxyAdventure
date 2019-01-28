@@ -6,15 +6,16 @@
 #include <glm/glm.hpp> 
 #include "ColBox.h"
 
+/*	Enthält das Objekt des Schiffes
+
+	@autor	Martina Brüning
+*/
+
 class Spaceship : public RenderedObject
 {
 public:
-	// Constructor
 	Spaceship(const char *filename, Renderer &renderer, GLuint shipTexture, GLuint TextureID);
-
-	// Destructor
 	virtual ~Spaceship();
-
 	virtual void draw(glm::mat4 &Model, GLuint programID);
 	
 };

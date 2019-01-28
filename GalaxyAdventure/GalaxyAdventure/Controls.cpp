@@ -2,14 +2,20 @@
 #include "Controls.h"
 
 
+/* Standard Konstruktor
+*/
 Controls::Controls()
 {
 }
 
 
 
-/** Moves the spaceship on the x axis.
-*	
+/* Moves the spaceship on the x axis.
+	
+	@param window
+	@param speed
+
+	@return
 */
 float Controls::moveSpaceshipOnX(GLFWwindow *window, float speed)
 {
@@ -27,8 +33,12 @@ float Controls::moveSpaceshipOnX(GLFWwindow *window, float speed)
 	return positionX;
 }
 
-/** Moves the spaceship on the y axis.
-*
+/* Moves the spaceship on the y axis.
+
+	@param window
+	@param speed
+
+	@return
 */
 float Controls::moveSpaceshipOnY(GLFWwindow *window, float speed)
 {
@@ -46,7 +56,11 @@ float Controls::moveSpaceshipOnY(GLFWwindow *window, float speed)
 }
 
 /** Moves the spaceship on the z axis.
-*
+
+	@param window
+	@param speed
+
+	@return
 */
 float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 {
@@ -64,7 +78,8 @@ float Controls::moveSpaceshipOnZ(GLFWwindow *window, float speed)
 }
 
 
-
+/*	Destruktor
+*/
 Controls::~Controls()
 {
 }

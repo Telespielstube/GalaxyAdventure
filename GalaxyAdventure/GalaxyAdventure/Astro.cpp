@@ -3,30 +3,40 @@
 
 
 
+/*	Konstruktor
 
-Astro::Astro(const char * filename, Renderer & renderer, GLuint gateTexture, GLuint TextureID, float scaleF) : RenderedObject(filename, renderer)
+	@param	filename	Pfad zur *.obj Datei
+	@param	renderer	Renderer der benutzt wird
+	@param	gateTexture	Textur
+	@param	TexturID	Die ID der Textur
+	@param	scaleF		Die Größe des Objektes
+*/
+Astro::Astro(const char * filename, Renderer & renderer, GLuint Texture, GLuint TextureID, float scaleF) : RenderedObject(filename, renderer)
 {
-	texture = gateTexture;
+	texture = Texture;
 	textureID = TextureID;	
 	scaleFactor = scaleF;
 
+	// Erzeugt ein Kollision Zylinder um das Objekt.
 	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.0f), 1.25f, 1.68f));
 
 }
 
+/* Standard Konstruktor
+*/
 Astro::~Astro()
-{
-	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteBuffers(1, &uvbuffer);
-	glDeleteBuffers(1, &normalbuffer);
+{	
 }
 
+/*	Zeichnet den Asteroiden
+
+	@param	Model	
+	@param	programID
+*/
 void Astro::draw(glm::mat4 & Model, GLuint programID)
 {
-	glActiveTexture(GL_TEXTURE0);
-	
-	glBindTexture(GL_TEXTURE_2D, texture);
-	
+	glActiveTexture(GL_TEXTURE0);	
+	glBindTexture(GL_TEXTURE_2D, texture);	
 	glUniform1i(textureID, 0);	
 	glm::vec3 lightPositionAstro = glm::vec3(.0, 0.0, .0);
 	glUniform3f(glGetUniformLocation(programID, "LightPositionAstro"), lightPositionAstro.x, lightPositionAstro.y, lightPositionAstro.z);
@@ -47,11 +57,19 @@ void Astro::draw(glm::mat4 & Model, GLuint programID)
 	Model = Save;
 }
 
+/*	Gibt die Größe des Objektes zurück
+
+	@return	die Größe
+*/
 float Astro::getScaleF()
 {
 	return scaleFactor;
 }
 
+/*	setzt die Richtung die sich der Astro bewegt zurück
+
+	@return die Richtung
+*/
 void Astro::setDirection(float x, float y, float z)
 {
 	dX = x;
@@ -59,6 +77,10 @@ void Astro::setDirection(float x, float y, float z)
 	dZ = z;
 }
 
+/*	Setzt die Größe des Astro
+
+	@param	s	Die Größe
+*/
 void Astro::setScaleF(float s)
 {
 	scaleFactor = s;
