@@ -34,10 +34,17 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 	
 }
 
+<<<<<<< HEAD
 /** Draws the object and aligns it.
 *
 *	@param	Model	The object to draw on screen.
 *
+=======
+/* Draws the object and aligns it.
+
+	@param	Model	Object to draw on screen.
+
+>>>>>>> a10d1f99906643b96e6d6e247fc380de61505f88
 */
 void Gate::draw(glm::mat4 &Model, GLuint programID)
 {	
@@ -68,7 +75,12 @@ float Gate::getScaleF()
 	return scaleFactor;
 }
 
+<<<<<<< HEAD
 // Destructor of Gate object
+=======
+/* Destructor of Gate object
+*/
+>>>>>>> a10d1f99906643b96e6d6e247fc380de61505f88
 Gate::~Gate()
 {
 	glDeleteBuffers(1, &vertexbuffer);
