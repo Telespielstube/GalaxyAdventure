@@ -122,9 +122,7 @@ void RenderedObject::addColCicle(ColCicle * c)
 
 /** Sets a specific position of the object.
 *	
-*	@param	x	holds the x coordinate.
-*	@param	y	holds the y coordinate.
-*	@param	z	holds the z coordinate.
+*	@param	p	holds the Position data.
 *
 */
 void RenderedObject::setPosition(Position p)
