@@ -2,6 +2,11 @@
 #include "Col.h"
 #include "ColBox.h"
 
+/*	KollisionBox in Form eines Zylinders
+	Der Kreis befindet sich immer auf der Y-Achse und die Breite des Zylinders geht richtung Z-Achse
+
+	@autor	Vassilios Tsankis s0558527
+*/
 class ColCicle : public Col
 {
 public:

@@ -3,7 +3,10 @@
 #include "ColCicle.h"
 
 
+/*	stellt Funktinen zur Kollisionserkennung bereit
 
+	@autor	Vassilios Tsanakis s0558527
+*/
 class Collision
 {
 public:

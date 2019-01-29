@@ -1,4 +1,9 @@
 #pragma once
+
+/*	Erzeugt zufals Zahlen
+
+	@autor
+*/
 class RandomNumber
 {
 public:

@@ -1,4 +1,10 @@
 #pragma once
+
+/*	Enthält die X Y Z Koordinaten und den Winkel eines Objektes
+	
+
+	@autor	Vassilios Tsankis s0558527
+*/
 class Position
 {
 public:
@@ -18,13 +24,15 @@ public:
 	void setPosition(float posX, float posY, float posZ, float angleX, float angleY, float angleZ);
 	Position adPosition(Position p1);
 	void setPosition(Position p);
-	void setPosition(Position p, float angleX, float angleY, float angleZ);
+	
 	
 
 protected:
-	float x, y, z;
-	float xAngle;
-	float yAngle;
-	float zAngle;
+	float x;	// X Koordinate im Raum
+	float y;	// Y Koordinate im Raum
+	float z;	// Z Koordinate im Raum
+	float xAngle;	// Wie das Objekt im Winkel X steht
+	float yAngle;	// Wie das Objekt im Winkel Y steht
+	float zAngle;	// Wie das Objekt im Winkel Z steht
 };
 

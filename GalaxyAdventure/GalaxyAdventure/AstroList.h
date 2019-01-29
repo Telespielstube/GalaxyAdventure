@@ -1,5 +1,10 @@
 #pragma once
 #include "Position.h"
+
+/*	Enthält die Daten eines Asteroiden fuer eine Vektorliste ohne das Objekt selber haben zu müssen.
+
+	@autor	Vassilios Tsankis s0558527
+*/
 class AstroList
 {
 public:

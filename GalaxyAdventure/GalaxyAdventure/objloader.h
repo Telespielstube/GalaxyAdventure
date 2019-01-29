@@ -7,6 +7,11 @@
 #include <vector>
 #include <glm\gtc\matrix_transform.hpp>
 
+
+/*	Zum laden eines Objektes aus einer *.obj datei
+
+	@autor	
+*/
 bool loadObject(
 	const char *path,
 	std::vector<glm::vec3> & out_vertices,
