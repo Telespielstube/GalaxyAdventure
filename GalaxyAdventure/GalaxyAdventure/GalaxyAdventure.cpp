@@ -95,7 +95,7 @@ int main()
 	astro = new Astro("../Object/Astro3.obj", modelRenderer, astroTexture, astroTextureID, 2);
 	astro->setPosition(Position(0, 0, -10));
 	for (int i = 0; i < 5; i++) {
-		astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40)), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
+		astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40)), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 600) * 0.0001 , rand() % 4 + 1));
 	}
 		
 	//////////////////////  Erstellung Sternenfeld  ///////////////////////////////////////
@@ -206,7 +206,7 @@ int main()
 			
 			// Collisionsdetection 
 			// Erste Erkennung welches Gate in der Nähe ist und speichert die ID des Gates					
-			if (col.checkCollision(spaceShip.getColBox()[0]->addPosition(spaceShip.getPosition()),gate->getColBox()[0]->addPosition(gate->getPosition()))) {
+			if (col.checkCollision(spaceShip.getColBox()[0]->addPosition(spaceShip.getPosition()),gate->getColCicle()[0]->addPosition(gate->getPosition()))) {
 				collision = true;
 				objID = i;				
 			}		
@@ -217,11 +217,13 @@ int main()
 			if (aGate == i)	
 			if (col.checkCollision(gt.addPosition(gate->getPosition()), st.addPosition(spaceShip.getPosition()))) {
 				std::cout << "Gate " << aGate << " durchflogen bei: " << spaceShip.getPosition().getX() << " " << spaceShip.getPosition().getY() << " " << spaceShip.getPosition().getZ() << std::endl;
-				aGate++;					
-				
+				aGate++;		
+				// Erstellt neues Gate
 				gateList.push_back(new Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) - 200, 5, 90,0));
+				// Setzt die Spielfeldgrenze nach hinten neu
 				grenzeZ = spaceShip.getPosition().getZ() + 40;
-				astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) -200), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 100) * 0.0001 , rand() % 4 + 1));
+				// Erstellt neuen Astro
+				astroList.push_back(new AstroList(Position(rand() % 40 - 20, rand() % 40 - 20, -40 - (i * 40) -200), Position(rand() % 2 - 1, rand() % 2 - 1, rand() % 2 - 1), (rand() % 600) * 0.0001 , rand() % 4 + 1));
 				
 			}			
 			// Zeichnet Gate
@@ -236,23 +238,19 @@ int main()
 				moveShip = true;							
 			}
 			else {
-				moveShip = false;
-				
+				moveShip = false;				
 			}
 			
 		} else {
 			bool collision = false;
 			gate->setPosition(*gateList.at(objID));			
 			
-			// Prüft die Kleineren Kollisionsboxen um das Gate.										
-			for (int i = 1; i < gate->getColCicle().size(); i++) {
-				for (int j = 1; j < spaceShip.getColBox().size(); j++) {					
-					if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))),gate->getColCicle()[i]->addPosition(gate->getPosition()),*new ColCicle(gate->getPosition(),3.7, 0.68))) {
-						collision = true;
-					}
-				}		
-			}
-			
+			// Prüft die Kleineren Kollisionsboxen vom Shiff.	
+			for (int j = 1; j < spaceShip.getColBox().size(); j++) {					
+				if (col.checkCollision(spaceShip.getColBox()[j]->addPosition(spaceShip.getPosition().adPosition(Position(spaceShipOnX,spaceShipOnY,spaceShipOnZ))),gate->getColCicle()[0]->addPosition(gate->getPosition()), gate->getColCicle()[1]->addPosition(gate->getPosition()))) {
+					collision = true;
+				}
+			}				
 			// Wenn keine Kollision = Schiff bewegen
 			if (!collision) {
 						
@@ -280,7 +278,7 @@ int main()
 				}
 				// Collisionsdetection 
 			
-					// Prüft die Kleineren Kollisionsboxen um das Gate.										
+				// Prüft die Kollision mit Gates									
 				for (int j = 0; j < gateList.size(); j++) {		
 					gate->setPosition(*gateList.at(j));					
 					if (col.checkCollision(astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()), gate->getColCicle()[0]->addPosition(gate->getPosition()))) {
@@ -288,12 +286,13 @@ int main()
 					}			
 					
 				}
+
+				// Prüft Kollison mit anderen Astros
 				for (int j = 0; j < astroList.size(); j++) {				
 					if (i != j)
 					if (col.checkCollision(astro->getColCicle()[0]->addScaleF(astroList[i]->getSize()).addPosition(astro->getPosition()), astro->getColCicle()[0]->addScaleF(astroList[j]->getSize()).addPosition(astroList[j]->getPosition()) )) {
 						aID = i;
 					}
-
 				}
 			
 		}
