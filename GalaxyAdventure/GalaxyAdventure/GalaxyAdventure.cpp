@@ -352,9 +352,9 @@ int main()
 	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
 	
 	// Destruct all objects.
-	gate->~Gate();
-	astro->~Astro();
-	star->~Star();
+	delete gate;
+	delete astro;
+	delete star;
 
 	// Delete the text's VBO, the shader and the texture
 	glDeleteProgram(programID);
