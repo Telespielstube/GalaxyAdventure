@@ -24,17 +24,12 @@ Gate::Gate(const char *filename, Renderer &renderer, GLuint gateTexture, GLuint 
 	texture = gateTexture;
 	textureID = TextureID;
 
-	addColCicle(new ColCicle(Position(0.0f, 0.0f, 0.3f), 4.25f, 4.68f));
+	
 	addColCicle(new ColCicle(Position(0.0f, 0.0f, -0.2f), 4.25f, 0.8f));	
-
-	//  ******************** Erstellung Kollisionsbox ums gate   *********************************
-
-		// Erste Kollisionsbox Main box dient zur erkennung das Schiff in der nähe ist zum Gate
-	addColBox(new ColBox( Position(- 5.0f,  - 5.0f,  - 3.2f), 12.0f, 12.0f, 4));
+	// Kollisionsbox die von der Oberen abgezogen wird
+	addColCicle(new ColCicle(Position(0.0f, 0.0f, -0.2f), 3.7f, 0.8f));
 
 	
-
-	//////////////////////////////////////////////
 	
 }
 
